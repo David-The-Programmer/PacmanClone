@@ -26,7 +26,7 @@ const TILE_WIDTH = CANVAS_WIDTH / NUM_COLS_TILES;
 const TILE_HEIGHT = CANVAS_HEIGHT / NUM_ROWS_TILES;
 
 // Width of the Pac-Man
-const PACMAN_WIDTH = 25;
+const PACMAN_WIDTH = 20;
 
 // Starting x position of pacman
 const START_X = (13 * TILE_WIDTH) + (TILE_WIDTH / 2);
@@ -110,8 +110,6 @@ function draw() {
         }
     }
 
-    
-
     // show the pacman
     pacman.show();
 
@@ -130,15 +128,15 @@ function draw() {
 
 function keyPressed() {
     if (keyCode == UP_ARROW) {
-        pacman.updateVels(0, -1);
+        pacman.direction(0, -1);
 
     } else if (keyCode == DOWN_ARROW) {
-        pacman.updateVels(0, 1);
+        pacman.direction(0, 1);
 
     } else if (keyCode == LEFT_ARROW) {
-        pacman.updateVels(-1, 0);
+        pacman.direction(-1, 0);
 
     } else if (keyCode == RIGHT_ARROW) {
-        pacman.updateVels(1, 0);
+        pacman.direction(1, 0);
     }
 }
