@@ -63,7 +63,6 @@ function preload() {
 
 function setup() {
     createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
-
     // Setting up the tiles
     for (let row = 0; row < NUM_ROWS_TILES; row++) {
         tiles[row] = [];
@@ -110,33 +109,28 @@ function draw() {
         }
     }
 
-    // show the pacman
-    pacman.show();
+
+    // keyboard movements to control pacman
+    if (keyIsPressed) {
+
+        if (keyCode == UP_ARROW) {
+            pacman.updateDirection(0, -1);
+
+        } else if (keyCode == DOWN_ARROW) {
+            pacman.updateDirection(0, 1);
+
+        } else if (keyCode == LEFT_ARROW) {
+            pacman.updateDirection(-1, 0);
+
+        } else if (keyCode == RIGHT_ARROW) {
+            pacman.updateDirection(1, 0);
+        }
+    }
 
     // move the pacman
     pacman.move();
 
-    // check if pacman can move in the direction he is going
-    // if he can, continue moving
-    // if not, stop him from moving
-    if(!pacman.checkPosition(tiles)) {
-        noLoop();
-    }
+    // show the pacman
+    pacman.show();
 
-
-}
-
-function keyPressed() {
-    if (keyCode == UP_ARROW) {
-        pacman.direction(0, -1);
-
-    } else if (keyCode == DOWN_ARROW) {
-        pacman.direction(0, 1);
-
-    } else if (keyCode == LEFT_ARROW) {
-        pacman.direction(-1, 0);
-
-    } else if (keyCode == RIGHT_ARROW) {
-        pacman.direction(1, 0);
-    }
 }
