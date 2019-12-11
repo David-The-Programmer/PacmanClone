@@ -28,6 +28,9 @@ const TILE_HEIGHT = CANVAS_HEIGHT / NUM_ROWS_TILES;
 // Width of the Pac-Man
 const PACMAN_WIDTH = 20;
 
+// Speed of the Pac-Man
+const PACMAN_SPEED = 2;
+
 // Starting x position of pacman
 const START_X = (13 * TILE_WIDTH) + (TILE_WIDTH / 2);
 
@@ -92,7 +95,7 @@ function setup() {
     }
 
     // Init the pacman
-    pacman = new Pacman(START_X, START_Y, PACMAN_WIDTH);
+    pacman = new Pacman(START_X, START_Y, PACMAN_WIDTH, PACMAN_SPEED);
 
 }
 
@@ -112,7 +115,6 @@ function draw() {
 
     // keyboard movements to control pacman
     if (keyIsPressed) {
-
         if (keyCode == UP_ARROW) {
             pacman.updateDirection(0, -1);
 
@@ -125,12 +127,13 @@ function draw() {
         } else if (keyCode == RIGHT_ARROW) {
             pacman.updateDirection(1, 0);
         }
+
     }
 
-    // move the pacman
-    pacman.move();
+    pacman.move(tiles);
 
     // show the pacman
     pacman.show();
+
 
 }
