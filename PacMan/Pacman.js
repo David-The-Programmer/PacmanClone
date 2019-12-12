@@ -175,4 +175,52 @@ class Pacman {
         return gridCoordsAhead;
     }
 
+    // function to check if pacman has eaten a dot
+    // receives the tiles object array
+    // return boolean to determine if pacman has eaten the dot
+    eatenDot(tiles) {
+        // Width of a tile
+        let tileWidth = tiles[0][0].width;
+
+        // Height of a tile
+        let tileHeight = tiles[0][0].height;
+
+        // find the current position of pacman in grid coordinates
+        let currentGridCoords = this.remap(this.currentPosition, tileWidth, tileHeight);
+
+        // find the tile pacman is currently on
+        let currentTile = tiles[currentGridCoords.y][currentGridCoords.x];
+
+        // if the tile has a dot, then return true
+        if (currentTile.part.dot) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // function to check if pacman has eaten a energizer
+    // receives the tiles object array
+    // return boolean to determine if pacman has eaten the dot
+    eatenEnergizer(tiles) {
+        // Width of a tile
+        let tileWidth = tiles[0][0].width;
+
+        // Height of a tile
+        let tileHeight = tiles[0][0].height;
+
+        // find the current position of pacman in grid coordinates
+        let currentGridCoords = this.remap(this.currentPosition, tileWidth, tileHeight);
+
+        // find the tile pacman is currently on
+        let currentTile = tiles[currentGridCoords.y][currentGridCoords.x];
+
+        // if the tile has a energizer, then return true
+        if (currentTile.part.energizer) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

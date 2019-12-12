@@ -129,6 +129,15 @@ function draw() {
         }
 
     }
+    // check if pacman has eaten dot
+    // if he did, remove it
+    if(pacman.eatenDot(tiles)) {
+        // current grid coordinates of pacman 
+        let currentGridCoords = pacman.remap(pacman.currentPosition, tiles[0][0].width, tiles[0][0].height);
+
+        // remove the dot
+        tiles[currentGridCoords.y][currentGridCoords.x].eaten = true;
+    }
 
     pacman.move(tiles);
 
