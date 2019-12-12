@@ -106,8 +106,29 @@ class Pacman {
         let tileHeight = tiles[0][0].height;
 
         // Remap x,y coordinates to grid coordinates (row number and col number of current position of pacman)
+        let currentGridCoords = this.remap(this.currentPosition, tileWidth, tileHeight);
+
+        // Now need to look one tile ahead of current position
+        // let gridCoordsAhead = currentGridCoords;
+        let gridCoordsAhead = this.lookAhead(currentGridCoords, this.direction, numCols, numRows);
+
+        // if the tile that is ahead of pacman is a wall,
+        // return true 
+        if (tiles[gridCoordsAhead.y][gridCoordsAhead.x].part.wall) {
+            return true;
+
+        } else {
+            return false;
+
+        }
+    }
+
+    // function to remap normal x,y coordinates of pacman's position to grid coordinates (col and row number)
+    // receives the current x, y coordinates vector object, width and height of a tiles 
+    // returns the grid coordinates of the current position of pacman
+    remap(currentPosition, tileWidth, tileHeight) {
         let currentGridCoords = createVector(0, 0);
-        currentGridCoords.x = this.currentPosition.x - (tileWidth / 2);
+        currentGridCoords.x = currentPosition.x - (tileWidth / 2);
 
         if (this.direction.x < 0) {
             currentGridCoords.x = Math.ceil(currentGridCoords.x / tileWidth);
@@ -115,7 +136,7 @@ class Pacman {
             currentGridCoords.x = Math.floor(currentGridCoords.x / tileWidth);
         }
 
-        currentGridCoords.y = this.currentPosition.y - (tileHeight / 2);
+        currentGridCoords.y = currentPosition.y - (tileHeight / 2);
 
         if (this.direction.y < 0) {
             currentGridCoords.y = Math.ceil(currentGridCoords.y / tileHeight);
@@ -123,11 +144,20 @@ class Pacman {
             currentGridCoords.y = Math.floor(currentGridCoords.y / tileHeight);
         }
 
-        // Now need to look one tile ahead of current position
+        return currentGridCoords;
+    }
+
+    // function to allow pacman to look ahead one tile in the direction pacman is moving towards
+    // receives the current grid coordinates vector object, 
+    // the current direction vector object,
+    // number of rows and number of cols of tiles array(maze)
+    // returns the grid coordinates of the tile ahead in the direction pacman is moving towards
+    lookAhead(currentGridCoords, currentDirection, numCols, numRows) {
+
         let gridCoordsAhead = currentGridCoords;
 
-        gridCoordsAhead.x += this.direction.x;
-        gridCoordsAhead.y += this.direction.y;
+        gridCoordsAhead.x += currentDirection.x;
+        gridCoordsAhead.y += currentDirection.y;
 
         // need to make sure that the grid coords does not go out of index of tile object array
         if (gridCoordsAhead.x < 0) {
@@ -142,15 +172,7 @@ class Pacman {
             gridCoordsAhead.y = numRows - 1;
         }
 
-        // if the tile that is ahead of pacman is a wall,
-        // return true 
-        if (tiles[gridCoordsAhead.y][gridCoordsAhead.x].part.wall) {
-            return true;
-
-        } else {
-            return false;
-
-        }
+        return gridCoordsAhead;
     }
 
 }
