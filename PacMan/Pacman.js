@@ -38,17 +38,30 @@ class Pacman {
     // function to make pacman move
     // receives the tile object array
     move(tiles) {
-        // if pacman hits a wall, then have to check for difference between current and previous direction
-        // if the current and previous direction are not the same
+        // if pacman hits a wall in the current direction he is moving in, 
         // set the current direction to the previous direction
+        // if pacman hits a wall in the previous direction he was moving in,
+        // he has truly hit a wall, thus he should stop moving.
+        // if pacman does not hit a wall in the previous direction he was moving in,
+        // pacman should continue moving in the previous direction
+        // this is so that pacman would continue moving if pacman is in between parallel walls
+        // and pacman is trying to move towards the walls
         if (this.hitsWall(tiles)) {
-            if ((this.direction.x != this.prevDirection.x) && (this.direction.y != this.prevDirection.y)) {
-                console.log("Changed to previous direction");
+            this.updateDirection(this.prevDirection.x, this.prevDirection.y);
+            if (!this.hitsWall(tiles)) {
 
-                this.direction.x = this.prevDirection.x;
-                this.direction.y = this.prevDirection.y;
+                // update the previous direction vector
+                this.prevDirection = createVector(this.direction.x, this.direction.y);
+
+                // update current position of pacman
+                this.currentPosition.x += this.direction.x * this.speed;
+                this.currentPosition.y += this.direction.y * this.speed;
+                this.steps++;
+                // reset steps when it hits 16 as pacman has to travel 16 pixels to move from one tile to the next
+                if (this.steps == MAX_STEPS / this.speed) {
+                    this.steps = 0;
+                }
             }
-
         } else {
             // update the previous direction vector
             this.prevDirection = createVector(this.direction.x, this.direction.y);
