@@ -36,8 +36,8 @@ class Pacman {
     }
 
     // function to make pacman move
-    // receives the tile object array
-    move(tiles) {
+    // receives the maze object
+    move(maze) {
         // if pacman hits a wall in the current direction he is moving in, 
         // set the current direction to the previous direction
         // if pacman hits a wall in the previous direction he was moving in,
@@ -46,9 +46,9 @@ class Pacman {
         // pacman should continue moving in the previous direction
         // this is so that pacman would continue moving if pacman is in between parallel walls
         // and pacman is trying to move towards the walls
-        if (this.hitsWall(tiles)) {
+        if (this.hitsWall(maze)) {
             this.updateDirection(this.prevDirection.x, this.prevDirection.y);
-            if (!this.hitsWall(tiles)) {
+            if (!this.hitsWall(maze)) {
 
                 // update the previous direction vector
                 this.prevDirection = createVector(this.direction.x, this.direction.y);
@@ -90,20 +90,20 @@ class Pacman {
     }
 
     // function to check if pacman hits a wall
-    // receives the tiles object array
+    // receives the maze object 
     // returns boolean to determine is pacman hits a wall
-    hitsWall(tiles) {
-        // Number of rows of tiles array(maze)
-        let numRows = tiles.length;
+    hitsWall(maze) {
+        // Number of rows of tiles array(in the maze)
+        let numRows = maze.numRows;
 
-        // Number of cols of tiles array(maze)
-        let numCols = tiles[0].length;
+        // Number of cols of tiles array(in the maze)
+        let numCols = maze.numCols;
 
         // Width of a tile
-        let tileWidth = tiles[0][0].width;
+        let tileWidth = maze.tileWidth;
 
         // Height of a tile
-        let tileHeight = tiles[0][0].height;
+        let tileHeight = maze.tileHeight;
 
         // Remap x,y coordinates to grid coordinates (row number and col number of current position of pacman)
         let currentGridCoords = this.remap(this.currentPosition, tileWidth, tileHeight);
@@ -114,7 +114,7 @@ class Pacman {
 
         // if the tile that is ahead of pacman is a wall,
         // return true 
-        if (tiles[gridCoordsAhead.y][gridCoordsAhead.x].part.wall) {
+        if (maze.tiles[gridCoordsAhead.y][gridCoordsAhead.x].part.wall) {
             return true;
 
         } else {
@@ -176,20 +176,20 @@ class Pacman {
     }
 
     // function to check if pacman has eaten a dot
-    // receives the tiles object array
+    // receives the maze object 
     // return boolean to determine if pacman has eaten the dot
-    eatenDot(tiles) {
+    eatenDot(maze) {
         // Width of a tile
-        let tileWidth = tiles[0][0].width;
+        let tileWidth = maze.tileWidth;
 
         // Height of a tile
-        let tileHeight = tiles[0][0].height;
+        let tileHeight = maze.tileHeight;
 
         // find the current position of pacman in grid coordinates
         let currentGridCoords = this.remap(this.currentPosition, tileWidth, tileHeight);
 
         // find the tile pacman is currently on
-        let currentTile = tiles[currentGridCoords.y][currentGridCoords.x];
+        let currentTile = maze.tiles[currentGridCoords.y][currentGridCoords.x];
 
         // if the tile has a dot, then return true
         if (currentTile.part.dot) {
@@ -200,20 +200,20 @@ class Pacman {
     }
 
     // function to check if pacman has eaten a energizer
-    // receives the tiles object array
+    // receives the maze object 
     // return boolean to determine if pacman has eaten the dot
-    eatenEnergizer(tiles) {
+    eatenEnergizer(maze) {
         // Width of a tile
-        let tileWidth = tiles[0][0].width;
+        let tileWidth = maze.tileWidth;
 
         // Height of a tile
-        let tileHeight = tiles[0][0].height;
+        let tileHeight = maze.tileHeight;
 
         // find the current position of pacman in grid coordinates
         let currentGridCoords = this.remap(this.currentPosition, tileWidth, tileHeight);
 
         // find the tile pacman is currently on
-        let currentTile = tiles[currentGridCoords.y][currentGridCoords.x];
+        let currentTile = maze.tiles[currentGridCoords.y][currentGridCoords.x];
 
         // if the tile has a energizer, then return true
         if (currentTile.part.energizer) {

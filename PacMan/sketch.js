@@ -37,8 +37,8 @@ const START_X = (13 * TILE_WIDTH) + (TILE_WIDTH / 2);
 // Starting y position of pacman
 const START_Y = (23 * TILE_HEIGHT) + (TILE_HEIGHT / 2);
 
-// 2D array of tile objects
-let tiles = [];
+// Maze object to store all info about the 2D array of tiles
+let maze;
 
 // tile representation
 let tileRep;
@@ -66,33 +66,9 @@ function preload() {
 
 function setup() {
     createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
-    // Setting up the tiles
-    for (let row = 0; row < NUM_ROWS_TILES; row++) {
-        tiles[row] = [];
-        for (let col = 0; col < NUM_COLS_TILES; col++) {
-            // set the parts that are going to be on each tile according to tileRep
-            let part = tileRep[row][col];
 
-            // Init new tile for each element in tiles array
-            tiles[row][col] = new Tile(col * TILE_WIDTH, row * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
-            // 1 = wall
-            // 0 = dot
-            // 8 = energizer
-            // 6 = blank space
-            if (part == 1) {
-                tiles[row][col].part.wall = true;
-
-            } else if (part == 0) {
-                tiles[row][col].part.dot = true;
-
-            } else if (part == 8) {
-                tiles[row][col].part.energizer = true;
-
-            } else if (part == 6) {
-                tiles[row][col].part.space = true;
-            }
-        }
-    }
+    // init the maze
+    maze = new Maze(NUM_ROWS_TILES, NUM_COLS_TILES, TILE_WIDTH, TILE_HEIGHT, tileRep);
 
     // Init the pacman
     pacman = new Pacman(START_X, START_Y, PACMAN_WIDTH, PACMAN_SPEED);
@@ -104,14 +80,8 @@ function draw() {
     // draw the image of maze
     image(mazeImg, 0, 0);
 
-    // show the dots / energizers  
-    // row x col
-    for (let i = 0; i < tiles.length; i++) {
-        for (let j = 0; j < tiles[0].length; j++) {
-            tiles[i][j].showDots();
-        }
-    }
-
+    // show the dots / energizers in the maze 
+    maze.showDots();
 
     // keyboard movements to control pacman
     if (keyIsPressed) {
@@ -131,15 +101,15 @@ function draw() {
     }
     // check if pacman has eaten dot
     // if he did, remove it
-    if(pacman.eatenDot(tiles)) {
+    if(pacman.eatenDot(maze)) {
         // current grid coordinates of pacman 
-        let currentGridCoords = pacman.remap(pacman.currentPosition, tiles[0][0].width, tiles[0][0].height);
+        let currentGridCoords = pacman.remap(pacman.currentPosition, maze.tileWidth, maze.tileHeight);
 
         // remove the dot
-        tiles[currentGridCoords.y][currentGridCoords.x].eaten = true;
+        maze.tiles[currentGridCoords.y][currentGridCoords.x].eaten = true;
     }
 
-    pacman.move(tiles);
+    pacman.move(maze);
 
     // show the pacman
     pacman.show();
