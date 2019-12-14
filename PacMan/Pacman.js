@@ -48,21 +48,8 @@ class Pacman {
         // and pacman is trying to move towards the walls
         if (this.hitsWall(maze)) {
             this.updateDirection(this.prevDirection.x, this.prevDirection.y);
-            if (!this.hitsWall(maze)) {
-
-                // update the previous direction vector
-                this.prevDirection = createVector(this.direction.x, this.direction.y);
-
-                // update current position of pacman
-                this.currentPosition.x += this.direction.x * this.speed;
-                this.currentPosition.y += this.direction.y * this.speed;
-                this.steps++;
-                // reset steps when it hits 16 as pacman has to travel 16 pixels to move from one tile to the next
-                if (this.steps == MAX_STEPS / this.speed) {
-                    this.steps = 0;
-                }
-            }
-        } else {
+        }
+        if (!this.hitsWall(maze)) {
             // update the previous direction vector
             this.prevDirection = createVector(this.direction.x, this.direction.y);
 
@@ -74,7 +61,6 @@ class Pacman {
             if (this.steps == MAX_STEPS / this.speed) {
                 this.steps = 0;
             }
-
         }
 
     }
