@@ -41,7 +41,7 @@ class Tile {
 
     // function to draw dots / energizers on the tile (as per type)
     // the walls and blank space would be already be drawn by the background map image
-    showDots() {
+    showDot() {
         // if the tile has a small dot (dot still not eaten)
         // show it
         if (this.part.dot && !this.eaten) {
@@ -55,6 +55,13 @@ class Tile {
             fill(255, 255, 0);
             noStroke();
             ellipse(this.x + (this.width / 2), this.y + (this.height / 2), ENERGIZER_WIDTH);
+        }
+    }
+
+    // function to remove the dot/energizer 
+    removeDot() {
+        if(this.part.dot || this.part.energizer) {
+            this.eaten = true;
         }
     }
 

@@ -54,9 +54,15 @@ class Maze {
         // row x col
         for (let i = 0; i < this.numRows; i++) {
             for (let j = 0; j < this.numCols; j++) {
-                this.tiles[i][j].showDots();
+                this.tiles[i][j].showDot();
             }
         }
+    }
+
+    // function to remove a dot from a specific tile in the maze
+    // receives the grid coordinates of the tile which contains the dot / energizer to remove
+    removeDot(dotGridCoords) {
+        this.tiles[dotGridCoords.y][dotGridCoords.x].removeDot();
     }
 
 }

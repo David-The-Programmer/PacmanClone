@@ -76,6 +76,7 @@ class Pacman {
             }
 
         }
+
     }
 
     // function to update the x and y velocities to change direction which pacman moves

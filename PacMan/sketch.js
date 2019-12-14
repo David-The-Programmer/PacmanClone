@@ -102,11 +102,11 @@ function draw() {
     // check if pacman has eaten dot
     // if he did, remove it
     if(pacman.eatenDot(maze)) {
-        // current grid coordinates of pacman 
+        // Get current grid coordinates of pacman 
         let currentGridCoords = pacman.remap(pacman.currentPosition, maze.tileWidth, maze.tileHeight);
 
         // remove the dot
-        maze.tiles[currentGridCoords.y][currentGridCoords.x].eaten = true;
+        maze.removeDot(currentGridCoords);
     }
 
     pacman.move(maze);
