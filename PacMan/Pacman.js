@@ -15,8 +15,8 @@ class Pacman {
         // width (diameter) of pacman
         this.width = width;
 
-        // direction vector which pacman moves
-        this.direction = createVector(-1, 0);
+        // current direction vector which pacman moves
+        this.currentDirection = createVector(-1, 0);
 
         // number of steps pacman takes to move from one tile to the next
         this.steps = 0;
@@ -25,7 +25,7 @@ class Pacman {
         this.speed = speed;
 
         // previous direction which pacman was moving
-        this.prevDirection = createVector(this.direction.x, this.direction.y);
+        this.prevDirection = createVector(this.currentDirection.x, this.currentDirection.y);
     }
 
     // function to display the pacman
@@ -51,11 +51,11 @@ class Pacman {
         }
         if (!this.hitsWall(maze)) {
             // update the previous direction vector
-            this.prevDirection = createVector(this.direction.x, this.direction.y);
+            this.prevDirection = createVector(this.currentDirection.x, this.currentDirection.y);
 
             // update current position of pacman
-            this.currentPosition.x += this.direction.x * this.speed;
-            this.currentPosition.y += this.direction.y * this.speed;
+            this.currentPosition.x += this.currentDirection.x * this.speed;
+            this.currentPosition.y += this.currentDirection.y * this.speed;
             this.steps++;
             // reset steps when it hits 16 as pacman has to travel 16 pixels to move from one tile to the next
             if (this.steps == MAX_STEPS / this.speed) {
@@ -71,8 +71,8 @@ class Pacman {
         // only if pacman is exactly on one tile, then update its direction
         if (this.steps == 0) {
             // need to update previous direction
-            this.direction.x = xVel;
-            this.direction.y = yVel;
+            this.currentDirection.x = xVel;
+            this.currentDirection.y = yVel;
         }
     }
 
@@ -86,18 +86,12 @@ class Pacman {
         // Number of cols of tiles array(in the maze)
         let numCols = maze.numCols;
 
-        // Width of a tile
-        let tileWidth = maze.tileWidth;
-
-        // Height of a tile
-        let tileHeight = maze.tileHeight;
-
         // Remap x,y coordinates to grid coordinates (row number and col number of current position of pacman)
-        let currentGridCoords = this.remap(this.currentPosition, tileWidth, tileHeight);
+        let currentGridCoords = maze.remap(this.currentPosition, this.currentDirection);
 
         // Now need to look one tile ahead of current position
         // let gridCoordsAhead = currentGridCoords;
-        let gridCoordsAhead = this.lookAhead(currentGridCoords, this.direction, numCols, numRows);
+        let gridCoordsAhead = this.lookAhead(currentGridCoords, this.currentDirection, numCols, numRows);
 
         // if the tile that is ahead of pacman is a wall,
         // return true 
@@ -108,30 +102,6 @@ class Pacman {
             return false;
 
         }
-    }
-
-    // function to remap normal x,y coordinates of pacman's position to grid coordinates (col and row number)
-    // receives the current x, y coordinates vector object, width and height of a tiles 
-    // returns the grid coordinates of the current position of pacman
-    remap(currentPosition, tileWidth, tileHeight) {
-        let currentGridCoords = createVector(0, 0);
-        currentGridCoords.x = currentPosition.x - (tileWidth / 2);
-
-        if (this.direction.x < 0) {
-            currentGridCoords.x = Math.ceil(currentGridCoords.x / tileWidth);
-        } else {
-            currentGridCoords.x = Math.floor(currentGridCoords.x / tileWidth);
-        }
-
-        currentGridCoords.y = currentPosition.y - (tileHeight / 2);
-
-        if (this.direction.y < 0) {
-            currentGridCoords.y = Math.ceil(currentGridCoords.y / tileHeight);
-        } else {
-            currentGridCoords.y = Math.floor(currentGridCoords.y / tileHeight);
-        }
-
-        return currentGridCoords;
     }
 
     // function to allow pacman to look ahead one tile in the direction pacman is moving towards
@@ -166,14 +136,8 @@ class Pacman {
     // receives the maze object 
     // return boolean to determine if pacman has eaten the dot
     eatenDot(maze) {
-        // Width of a tile
-        let tileWidth = maze.tileWidth;
-
-        // Height of a tile
-        let tileHeight = maze.tileHeight;
-
         // find the current position of pacman in grid coordinates
-        let currentGridCoords = this.remap(this.currentPosition, tileWidth, tileHeight);
+        let currentGridCoords = maze.remap(this.currentPosition, this.currentDirection);
 
         // find the tile pacman is currently on
         let currentTile = maze.tiles[currentGridCoords.y][currentGridCoords.x];
@@ -197,7 +161,7 @@ class Pacman {
         let tileHeight = maze.tileHeight;
 
         // find the current position of pacman in grid coordinates
-        let currentGridCoords = this.remap(this.currentPosition, tileWidth, tileHeight);
+        let currentGridCoords = maze.remap(this.currentPosition, this.currentDirection);
 
         // find the tile pacman is currently on
         let currentTile = maze.tiles[currentGridCoords.y][currentGridCoords.x];

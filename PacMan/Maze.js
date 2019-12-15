@@ -65,4 +65,29 @@ class Maze {
         this.tiles[dotGridCoords.y][dotGridCoords.x].removeDot();
     }
 
+    // function to handle remapping of x,y coords to grid coords
+    // receives the x,y position vector and a direction vector 
+    // returns the position vector in grid coords (col number, row number)
+    // mainly used to remap the x,y coords of pacman/ghosts
+    remap(position, direction) {
+        let gridCoords = createVector(0, 0);
+        gridCoords.x = position.x - (this.tileWidth / 2);
+
+        if (direction.x < 0) {
+            gridCoords.x = Math.ceil(gridCoords.x / this.tileWidth);
+        } else {
+            gridCoords.x = Math.floor(gridCoords.x / this.tileWidth);
+        }
+
+        gridCoords.y = position.y - (this.tileHeight / 2);
+
+        if (direction.y < 0) {
+            gridCoords.y = Math.ceil(gridCoords.y / this.tileHeight);
+        } else {
+            gridCoords.y = Math.floor(gridCoords.y / this.tileHeight);
+        }
+
+        return gridCoords;
+    }
+
 }
