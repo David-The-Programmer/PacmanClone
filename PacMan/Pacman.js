@@ -80,22 +80,15 @@ class Pacman {
     // receives the maze object 
     // returns boolean to determine is pacman hits a wall
     hitsWall(maze) {
-        // Number of rows of tiles array(in the maze)
-        let numRows = maze.numRows;
-
-        // Number of cols of tiles array(in the maze)
-        let numCols = maze.numCols;
-
         // Remap x,y coordinates to grid coordinates (row number and col number of current position of pacman)
         let currentGridCoords = maze.remap(this.currentPosition, this.currentDirection);
 
-        // Now need to look one tile ahead of current position
-        // let gridCoordsAhead = currentGridCoords;
-        let gridCoordsAhead = this.lookAhead(currentGridCoords, this.currentDirection, numCols, numRows);
+        // Now need to get the tile ahead of current position
+        let tileAhead = this.lookAhead(currentGridCoords, this.currentDirection, maze);
 
         // if the tile that is ahead of pacman is a wall,
         // return true 
-        if (maze.tiles[gridCoordsAhead.y][gridCoordsAhead.x].part.wall) {
+        if (tileAhead.part.wall) {
             return true;
 
         } else {
@@ -107,9 +100,14 @@ class Pacman {
     // function to allow pacman to look ahead one tile in the direction pacman is moving towards
     // receives the current grid coordinates vector object, 
     // the current direction vector object,
-    // number of rows and number of cols of tiles array(maze)
-    // returns the grid coordinates of the tile ahead in the direction pacman is moving towards
-    lookAhead(currentGridCoords, currentDirection, numCols, numRows) {
+    // and maze object
+    // returns the tile ahead in the direction pacman is moving towards
+    lookAhead(currentGridCoords, currentDirection, maze) {
+        // number of columns in the maze
+        let numCols = maze.numCols;
+
+        // number of rows in the maze
+        let numRows = maze.numRows;
 
         let gridCoordsAhead = currentGridCoords;
 
@@ -129,7 +127,8 @@ class Pacman {
             gridCoordsAhead.y = numRows - 1;
         }
 
-        return gridCoordsAhead;
+        // return the tile ahead in the direction pacman is moving
+        return maze.tiles[gridCoordsAhead.y][gridCoordsAhead.x];
     }
 
     // function to check if pacman has eaten a dot
