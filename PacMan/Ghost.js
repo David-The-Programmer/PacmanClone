@@ -118,7 +118,25 @@ class Ghost {
 
             // Need to handle a few different cases
             // Also implement the directional hierachy
+            // Few cases that need to be handled
+            // if there are only two distances and they are equal, need to check the directions
+            // Direction hierachy
+            // -------------------
+            // 1) UP
+            // 2) LEFT
+            // 3) DOWN
+            // 4) RIGHT
+            // If the directions contains UP, return that direction
+            // If the directions contains LEFT, return that direction
+            // If the directions contains DOWN, return that direction
+            // If the directions contains RIGHT, return that direction
 
+            // if there are three distances 
+            // and they are equal, do the same thing
+            // if they are all different, find smallest
+            // if two of them are the same, check if either one is smaller than the odd one out
+            // if the two of the same are smaller, check against direction hierachy
+            // if the two of the same are larger, then go with the odd one out which is smaller
             return directions[index];
         }
 
@@ -140,7 +158,7 @@ class Ghost {
         let gridCoordsAhead = createVector(currentGridCoords.x, currentGridCoords.y);
         gridCoordsAhead.x += direction.x;
         gridCoordsAhead.y += direction.y;
-        
+
         // need to make sure that the grid coords does not go out of index of tile object array
         if (gridCoordsAhead.x < 0) {
             gridCoordsAhead.x = 0;
