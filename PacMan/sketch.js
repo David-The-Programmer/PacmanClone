@@ -32,10 +32,22 @@ const PACMAN_WIDTH = 20;
 const PACMAN_SPEED = 2;
 
 // Starting x position of pacman
-const START_X = (13 * TILE_WIDTH) + (TILE_WIDTH / 2);
+const START_X_PACMAN = (13 * TILE_WIDTH) + (TILE_WIDTH / 2);
 
 // Starting y position of pacman
-const START_Y = (23 * TILE_HEIGHT) + (TILE_HEIGHT / 2);
+const START_Y_PACMAN = (23 * TILE_HEIGHT) + (TILE_HEIGHT / 2);
+
+// Width of the ghost
+const GHOST_WIDTH = PACMAN_WIDTH;
+
+// Speed of the ghost
+const GHOST_SPEED = PACMAN_SPEED;
+
+// Starting x position of ghost
+const START_X_GHOST= (13 * TILE_WIDTH) + (TILE_WIDTH / 2);
+
+// Starting y position of ghost
+const START_Y_GHOST= (23 * TILE_HEIGHT) + (TILE_HEIGHT / 2);
 
 // Maze object to store all info about the 2D array of tiles
 let maze;
@@ -48,6 +60,9 @@ let mazeImg;
 
 // Pac-Man object
 let pacman;
+
+// Ghost object
+let ghost;
 
 function preload() {
     // load the maze image
@@ -71,7 +86,12 @@ function setup() {
     maze = new Maze(NUM_ROWS_TILES, NUM_COLS_TILES, TILE_WIDTH, TILE_HEIGHT, tileRep);
 
     // Init the pacman
-    pacman = new Pacman(START_X, START_Y, PACMAN_WIDTH, PACMAN_SPEED);
+    pacman = new Pacman(START_X_PACMAN, START_Y_PACMAN, PACMAN_WIDTH, PACMAN_SPEED);
+
+    // init ghost
+    ghost = new Ghost(START_X_GHOST, START_Y_GHOST, GHOST_WIDTH, GHOST_SPEED);
+    // init the target tile of ghost
+    ghost.setTargetTile(createVector(0, 0));
 
 }
 
@@ -82,6 +102,12 @@ function draw() {
 
     // show the dots / energizers in the maze 
     maze.showDots();
+
+    // show the ghost
+    ghost.show();
+
+    // move the ghost
+    ghost.move(maze);
 
     // keyboard movements to control pacman
     if (keyIsPressed) {
@@ -114,5 +140,5 @@ function draw() {
     // show the pacman
     pacman.show();
 
-
+    ghost.setTargetTile(createVector(pacman.currentPosition.x, pacman.currentPosition.y));
 }
