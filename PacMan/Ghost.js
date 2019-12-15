@@ -65,7 +65,7 @@ class Ghost {
         return [tilesAhead, [UP_DIRECTION, DOWN_DIRECTION, LEFT_DIRECTION, RIGHT_DIRECTION]];
     }
 
-    // subsequently a function to handle the direction which the ghost should move
+    // function to handle the direction which the ghost should move
     // receives the array which contains the array of tiles ahead of ghost for each direction
     // and the array of directions, corresponding to each tile respectively
     // returns direction which ghost should move 
@@ -93,7 +93,6 @@ class Ghost {
             }
         }
 
-
         // if there is only one direction left, return the direction leading to the tile
         if (directions.length == 1) {
             return directions[0];
@@ -116,6 +115,10 @@ class Ghost {
                     index = i;
                 }
             }
+
+            // Need to handle a few different cases
+            // Also implement the directional hierachy
+
             return directions[index];
         }
 
