@@ -95,53 +95,90 @@ class Ghost {
 
         // if there is only one direction left, return the direction leading to the tile
         if (directions.length == 1) {
+
             return directions[0];
         } else {
-            // if not check which one has the shorter distance to the target tile
+            // else, have to calculate and compare distance from the tile ahead (in all possible directions)
+            // to the target tile to determine direction to go
             let distances = [];
 
             // Calculate all the distances
-            for (let i = 0; i < tilesAhead.length; i++) {
+            for (let i = 0; i < directions.length; i++) {
                 distances.push(dist(this.targetTileCoords.x, this.targetTileCoords.y, tilesAhead[i].x, tilesAhead[i].y));
             }
 
-            // compare all the distances to find the smallest one
-            // and get the index of the smallest distance
-            let smallestDist = Infinity;
-            let index = 0;
-            for (let i = distances.length - 1; i >= 0; i--) {
-                if (smallestDist > distances[i]) {
-                    smallestDist = distances[i];
-                    index = i;
-                }
-            }
-
-            // Need to handle a few different cases
-            // Also implement the directional hierachy
-            // Few cases that need to be handled
-            // if there are only two distances and they are equal, need to check the directions
+            // Before comparing the distances, need to see how many distances are there
+            // if there are only two/three distances and they are equal,
+            // need to check the directions according to direction hierarchy
             // Direction hierachy
             // -------------------
             // 1) UP
             // 2) LEFT
             // 3) DOWN
             // 4) RIGHT
-            // If the directions contains UP, return that direction
-            // If the directions contains LEFT, return that direction
-            // If the directions contains DOWN, return that direction
-            // If the directions contains RIGHT, return that direction
+            const UP_DIRECTION = createVector(0, -1);
+            const DOWN_DIRECTION = createVector(0, 1);
+            const LEFT_DIRECTION = createVector(-1, 0);
+            const RIGHT_DIRECTION = createVector(1, 0);
 
-            // if there are three distances 
-            // and they are equal, do the same thing
-            // if they are all different, find smallest
-            // if two of them are the same, check if either one is smaller than the odd one out
-            // if the two of the same are smaller, check against direction hierachy
-            // if the two of the same are larger, then go with the odd one out which is smaller
-            return directions[index];
+            // Array to store the direction hierachy in order
+            const DIRECTION_HIERACHY = [UP_DIRECTION, LEFT_DIRECTION, DOWN_DIRECTION, RIGHT_DIRECTION];
+
+
+            // if there are two distances to compare and both of them are equal
+            // or if there are three distances to compare and all three are equal
+            // return the direction according to the direction hierarchy
+            if ((distances.length == 2 && distances[0] == distances[1]) ||
+                (distances.length == 3 && distances[0] == distances[1] && distances[1] == distances[2])) {
+                // Array to store the indexes of the directions in relation to the DIRECTION_HIERACHY
+                // for e.g, if the directions array contains UP_DIRECTION and LEFT_DIRECTION,
+                // then the array would contain [0, 1] 
+                let directionIndexes = [];
+
+                // check what directions are remaining
+                for (let i = 0; i < directions.length; i++) {
+                    if (directions[i].x == UP_DIRECTION.x && directions[i].y == UP_DIRECTION.y) {
+                        directionIndexes.push(0);
+
+                    } else if (directions[i].x == LEFT_DIRECTION.x && directions[i].y == LEFT_DIRECTION.y) {
+                        directionIndexes.push(1);
+
+                    } else if (directions[i].x == DOWN_DIRECTION.x && directions[i].y == DOWN_DIRECTION.y) {
+                        directionIndexes.push(2);
+
+                    } else if (directions[i].x == RIGHT_DIRECTION.x && directions[i].y == RIGHT_DIRECTION.y) {
+                        directionIndexes.push(3);
+                    }
+                }
+                // after checking who is remaining, 
+                // find the smallest index 
+                let smallestIndex = Infinity;
+                for (let i = 0; i < directionIndexes.length; i++) {
+                    if (smallestIndex > directionIndexes[i]) {
+                        smallestIndex = directionIndexes[i];
+                    }
+                }
+                // after finding the smallest index
+                // use that index to return the direction to go
+                return DIRECTION_HIERACHY[smallestIndex];
+
+            } else {
+                // if not check which one has the shorter distance to the target tile
+                // compare all the distances to find the smallest one
+                // and get the index of the smallest distance
+                let smallestDist = Infinity;
+                let index = 0;
+                for (let i = distances.length - 1; i >= 0; i--) {
+                    if (smallestDist > distances[i]) {
+                        smallestDist = distances[i];
+                        index = i;
+                    }
+                }
+                return directions[index];
+            }
         }
 
     }
-
 
     // function to allow ghost to look ahead one tile in any direction 
     // receives the grid coordinates vector object, 
