@@ -47,7 +47,7 @@ const GHOST_SPEED = PACMAN_SPEED;
 const START_X_GHOST= (13 * TILE_WIDTH) + (TILE_WIDTH / 2);
 
 // Starting y position of ghost
-const START_Y_GHOST= (12 * TILE_HEIGHT) + (TILE_HEIGHT / 2);
+const START_Y_GHOST= (11 * TILE_HEIGHT) + (TILE_HEIGHT / 2);
 
 // x coordinates of target tile for scatter mode for Blinky(red)
 const BLINKY_SCATTER_X_TARGET = (NUM_COLS_TILES - 1) * TILE_WIDTH; 
@@ -114,6 +114,9 @@ function setup() {
 
     // init ghost
     ghost = new Ghost(START_X_GHOST, START_Y_GHOST, GHOST_WIDTH, GHOST_SPEED);
+
+    // init the scatter mode target tile of ghost
+    ghost.setScatterTargetTile(createVector(BLINKY_SCATTER_X_TARGET, BLINKY_SCATTER_Y_TARGET));
 }
 
 function draw() {
@@ -127,9 +130,14 @@ function draw() {
     // show the ghost
     ghost.show();
 
+    // set the mode of the ghost
+    ghost.setMode("eaten");
+    // handle the mode
+    ghost.handleMode();
+
     // move the ghost
-    // ghost.move(maze);
-    ghost.scatterMode(createVector(BLINKY_SCATTER_X_TARGET, BLINKY_SCATTER_Y_TARGET), maze);
+    ghost.move(maze);
+    // ghost.scatterMode(createVector(BLINKY_SCATTER_X_TARGET, BLINKY_SCATTER_Y_TARGET), maze);
 
     // keyboard movements to control pacman
     if (keyIsPressed) {
