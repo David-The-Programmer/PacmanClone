@@ -5,6 +5,9 @@
  */
 class Ghost {
     constructor(x, y, width, speed) {
+        // starting position of ghost
+        this.startingPosition = createVector(x, y);
+
         // current position vector of ghost
         this.currentPosition = createVector(x, y);
 
@@ -20,11 +23,17 @@ class Ghost {
         // speed (number of pixels) which ghost moves every frame
         this.speed = speed;
 
-        // previous direction which ghost was moving
-        // this.prevDirection = createVector(this.direction.x, this.direction.y);
-
         // x, y coordinates of the target tile 
         this.targetTileCoords = createVector(0, 0);
+
+        // current mode of the ghost
+        // default mode of ghost is scatter mode
+        this.mode = {
+            chase: false,
+            scatter: true,
+            frightened: false,
+            eaten: false
+        };
     }
 
     // function to display the ghost
@@ -248,5 +257,33 @@ class Ghost {
         this.currentDirection.x = xVel;
         this.currentDirection.y = yVel;
     }
+
+    // function to execute when ghost is in scatter mode 
+    // In the scatter mode function,
+    // ghost has to turn 180 (PI)
+    // Set target tile to one of the four corners of maze
+    // then move!
+    // scatter mode only activates four times
+    // duration of scatter mode is very short(duration can be based on number of tile it has travelled)
+    // receives the x,y coordinates of the target tile (one of the four corners of the maze, dependent on ghost)
+    // also receives maze object
+    scatterMode(targetTileCoords, maze) {
+        this.setTargetTile(targetTileCoords);
+        this.move(maze);
+    }
+
+
+
+
+    // HANDLE DIRECTION NEEDS TO BE ABLE TO HANDLE FRIGHTENED MODE AS WELL (JUST MODIFY AFTER CHECKING length of direction)
+
+
+    // function that would turn ghost 180 degrees (this can be done with update direction)
+    // 
+
+
+    // function to execute when ghost is in frightened mode
+    // function to execute when ghost is in eaten mode
+    // function to execute when ghost is in chase mode
 
 }

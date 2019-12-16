@@ -47,7 +47,31 @@ const GHOST_SPEED = PACMAN_SPEED;
 const START_X_GHOST= (13 * TILE_WIDTH) + (TILE_WIDTH / 2);
 
 // Starting y position of ghost
-const START_Y_GHOST= (23 * TILE_HEIGHT) + (TILE_HEIGHT / 2);
+const START_Y_GHOST= (12 * TILE_HEIGHT) + (TILE_HEIGHT / 2);
+
+// x coordinates of target tile for scatter mode for Blinky(red)
+const BLINKY_SCATTER_X_TARGET = (NUM_COLS_TILES - 1) * TILE_WIDTH; 
+
+// y coordinates of target tile for scatter mode for Blinky(red)
+const BLINKY_SCATTER_Y_TARGET = 0; 
+
+// x coordinates of target tile for scatter mode for Pinky(pink)
+const PINKY_SCATTER_X_TARGET = 0; 
+
+// y coordinates of target tile for scatter mode for Pinky(pink)
+const PINKY_SCATTER_Y_TARGET = 0; 
+
+// x coordinates of target tile for scatter mode for Inky(turquoise)
+const INKY_SCATTER_X_TARGET= (NUM_COLS_TILES - 1) * TILE_WIDTH; 
+
+// y coordinates of target tile for scatter mode for Inky(turquoise)
+const INKY_SCATTER_Y_TARGET= (NUM_ROWS_TILES - 1) * TILE_HEIGHT; 
+
+// x coordinates of target tile for scatter mode for Clyde(orange)
+const CLYDE_SCATTER_X_TARGET = 0; 
+
+// y coordinates of target tile for scatter mode for Clyde(orange)
+const CLYDE_SCATTER_Y_TARGET = (NUM_ROWS_TILES - 1) * TILE_HEIGHT; 
 
 // Maze object to store all info about the 2D array of tiles
 let maze;
@@ -90,9 +114,6 @@ function setup() {
 
     // init ghost
     ghost = new Ghost(START_X_GHOST, START_Y_GHOST, GHOST_WIDTH, GHOST_SPEED);
-    // init the target tile of ghost
-    ghost.setTargetTile(createVector(0, 0));
-
 }
 
 function draw() {
@@ -107,7 +128,8 @@ function draw() {
     ghost.show();
 
     // move the ghost
-    ghost.move(maze);
+    // ghost.move(maze);
+    ghost.scatterMode(createVector(BLINKY_SCATTER_X_TARGET, BLINKY_SCATTER_Y_TARGET), maze);
 
     // keyboard movements to control pacman
     if (keyIsPressed) {
@@ -140,5 +162,4 @@ function draw() {
     // show the pacman
     pacman.show();
 
-    ghost.setTargetTile(createVector(pacman.currentPosition.x, pacman.currentPosition.y));
 }
