@@ -23,6 +23,12 @@ class Ghost {
         // speed (number of pixels) which ghost moves every frame
         this.speed = speed;
 
+        // speed (number of pixels) which ghost moves every frame in frightened mode
+        this.frightenedModeSpeed = speed / 2;
+
+        // original speed which ghost moved
+        this.originalSpeed = speed;
+
         // x, y coordinates of the target tile 
         this.targetTileCoords = createVector(0, 0);
 
@@ -58,7 +64,20 @@ class Ghost {
 
     // function to display the ghost
     show() {
-        fill(255, 0, 0);
+        // if the ghost is in eaten mode
+        // set the ghost to be translucent
+        if (this.mode.eaten) {
+            fill(255, 0, 0, 30);
+
+            // if the ghost is in frightened mode
+            // set the ghost to be blue
+        } else if (this.mode.frightened) {
+            fill(0, 0, 255);
+
+        } else {
+            // if the ghost is in either scatter or chase mode, just put to red (original colour)
+            fill(255, 0, 0);
+        }
         noStroke();
         ellipse(this.currentPosition.x, this.currentPosition.y, this.width);
     }
@@ -264,6 +283,14 @@ class Ghost {
             let directionToGo = this.handleDirection(tilesAhead, directions);
 
             this.updateDirection(directionToGo.x, directionToGo.y);
+
+            // if the ghost is in frightened mode, use the frightened mode speed (half of normal speed)
+            // speed change can only happen when the ghost is exactly on one tile
+            if(this.mode.frightened) {
+                this.speed = this.frightenedModeSpeed;
+            } else {
+                this.speed = this.originalSpeed;
+            }
         }
         // update current position of ghost
         this.currentPosition.x += this.currentDirection.x * this.speed;
@@ -283,11 +310,7 @@ class Ghost {
         this.currentDirection.y = yVel;
     }
 
-    // function to execute when ghost is in scatter mode 
     // In the scatter mode function,
-    // ghost has to turn 180 (PI)
-    // Set target tile to one of the four corners of maze
-    // then move!
     // scatter mode only activates four times
     // duration of scatter mode is very short(duration can be based on number of frames that passed)
 
@@ -295,19 +318,6 @@ class Ghost {
     // ------------
     // What point of time does it activate?
     // At the start, after that ???
-
-    // receives the x,y coordinates of the target tile (one of the four corners of the maze, dependent on ghost)
-    // and receives maze object
-    scatterMode(targetTileCoords, maze) {
-        this.setTargetTile(targetTileCoords);
-        this.move(maze);
-    }
-
-    // HANDLE DIRECTION NEEDS TO BE ABLE TO HANDLE FRIGHTENED MODE AS WELL (JUST MODIFY AFTER CHECKING length of direction)
-
-    // Actually, I just need a function to turn 180 degrees (when needed) and most importantly
-    // set the target tile x, y coords for each mode, that is all
-    // that function should take in the 
 
     // function to set the mode 
     // receives the mode to switch to (string)
@@ -358,8 +368,9 @@ class Ghost {
     // for frightened mode, no target tile
 
     // function to handle modes
-    // receives the pacman current position
-    handleMode(pacmanCurrentPosition) {
+    // used for setting target tile for each of the modes
+    // receives the target tile position in chase mode
+    handleMode(chaseTargetTileCoords) {
         // if current mode is not eaten mode
         // turn 180 degrees
         // have to keep track of previous mode
@@ -375,8 +386,6 @@ class Ghost {
 
             // if there was a mode change and steps is 0, turn 180 degrees,
             if (this.steps == 0 && this.modeChanged) {
-
-                console.log("HELLO");
                 // turning ghost 180 degrees
                 this.updateDirection(this.currentDirection.x * -1, this.currentDirection.y * -1);
 
@@ -389,9 +398,9 @@ class Ghost {
         if (this.mode.scatter) {
             this.setTargetTile(this.scatterModeTargetTileCoords);
 
-            // if chase mode is activated then set target tile to be pacman current position
+            // if chase mode is activated then set target tile to be the target tile of chase mode of the ghost
         } else if (this.mode.chase) {
-            this.setTargetTile(pacmanCurrentPosition);
+            this.setTargetTile(chaseTargetTileCoords);
 
             // if eaten mode is activated, then set the target tile to the ghost's starting position
             // in order to force the ghost to return back to the ghost house

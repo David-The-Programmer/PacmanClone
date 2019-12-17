@@ -135,7 +135,6 @@ function draw() {
 
     // move the ghost
     ghost.move(maze);
-    // ghost.scatterMode(createVector(BLINKY_SCATTER_X_TARGET, BLINKY_SCATTER_Y_TARGET), maze);
 
     // keyboard movements to control pacman
     if (keyIsPressed) {
@@ -153,15 +152,19 @@ function draw() {
 
         } else if (key == "c") {
             ghost.setMode("chase");
-
+            console.log("chase");
+            
         } else if (key == "s") {
             ghost.setMode("scatter");
+            console.log("scatter");
 
         } else if (key == "f") {
             ghost.setMode("frightened");
+            console.log("frightened");
 
         } else if (key == "e") {
             ghost.setMode("eaten");
+            console.log("eaten");
         }
 
 
