@@ -147,7 +147,14 @@ function draw() {
         } else if (pacman.eatenEnergizer(maze)) {
             ghost.setMode("frightened");
 
-        } // Insert setting between scatter and chase mode here...
+            // if chase mode has ended, set mode to scatter mode
+        } else if (ghost.chaseModeEnded()) {
+            ghost.setMode("scatter");
+
+            // if scatter mode has ended, set the mode to chase mode
+        } else if(ghost.scatterModeEnded()) {
+            ghost.setMode("chase");
+        }
     } else {
         // if ghost is eaten, check if it has reached front of ghost house
         if (ghost.reachedGhostHouse()) {
