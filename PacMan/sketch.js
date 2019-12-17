@@ -127,11 +127,49 @@ function draw() {
     // show the dots / energizers in the maze 
     maze.showDots();
 
+    // ----------------------------------Setting the ghost mode----------------------------------------//
+    // Have to first check if ghost is not eaten
+    // as long as ghost is not eaten, set other modes appropriately
+    if (!ghost.mode.eaten) {
+        // if pacman eats a ghost that is not eaten yet
+        // check if ghost is frightened
+        if (pacman.eatGhost(ghost.currentPosition)) {
+            // if ghost is not frightened, pacman is dead (GAME OVER)
+            if (!ghost.mode.frightened) {
+                console.log("GAME OVER");
+
+            } else {
+                // if ghost is frightened, then set ghost to eaten mode
+                ghost.setMode("eaten");
+            }
+
+            // if pacman eats energizer, then set ghost to frightened mode
+        } else if (pacman.eatenEnergizer(maze)) {
+            ghost.setMode("frightened");
+
+        } // Insert setting between scatter and chase mode here...
+    } else {
+        // if ghost is eaten, check if it has reached front of ghost house
+        if (ghost.reachedGhostHouse()) {
+            // if it has reached, set it back to scatter mode
+            ghost.setMode("scatter");
+        }
+    }
+    // if pacman eats dots/energizer, remove them, regardless of state of ghost
+    if (pacman.eatenDot(maze) || pacman.eatenEnergizer(maze)) {
+        // Get current grid coordinates of pacman 
+        let currentGridCoords = maze.remap(pacman.currentPosition, pacman.currentDirection);
+        // remove the dot/energizer
+        maze.removeDot(currentGridCoords);
+    }
+
+    // ----------------------------------Setting the ghost mode----------------------------------------//
+
+    // handle the mode appropriately
+    ghost.handleMode(pacman.currentPosition);
+
     // show the ghost
     ghost.show();
-
-    // handle the mode
-    ghost.handleMode(pacman.currentPosition);
 
     // move the ghost
     ghost.move(maze);
@@ -150,39 +188,23 @@ function draw() {
         } else if (keyCode == RIGHT_ARROW) {
             pacman.updateDirection(1, 0);
 
-        } else if (key == "c") {
-            ghost.setMode("chase");
-            console.log("chase");
-            
-        } else if (key == "s") {
-            ghost.setMode("scatter");
-            console.log("scatter");
-
-        } else if (key == "f") {
-            ghost.setMode("frightened");
-            console.log("frightened");
-
-        } else if (key == "e") {
-            ghost.setMode("eaten");
-            console.log("eaten");
         }
-
-
-
     }
-    // check if pacman has eaten dot
-    // if he did, remove it
-    if (pacman.eatenDot(maze)) {
-        // Get current grid coordinates of pacman 
-        let currentGridCoords = maze.remap(pacman.currentPosition, pacman.currentDirection);
-
-        // remove the dot
-        maze.removeDot(currentGridCoords);
-    }
-
+    // move the pacman
     pacman.move(maze);
 
     // show the pacman
     pacman.show();
 
+    // Game events execution order
+    // ---------------------------
+    // 1) Background 
+    // 2) Show dots / energizers
+    // 3) Coordination of setting current mode of ghost
+    // 4) Handling what to do for the current mode of ghost
+    // 5) Show ghost
+    // 6) Move ghost 
+    // 7) Keyboard controls for pacman
+    // 8) Move pacman
+    // 9) Show pacman
 }

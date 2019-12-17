@@ -15,7 +15,7 @@ class Ghost {
         this.width = width;
 
         // current direction vector which ghost moves
-        this.currentDirection = createVector(1, 0);
+        this.currentDirection = createVector(-1, 0);
 
         // number of steps ghost takes to move from one tile to the next
         this.steps = 0;
@@ -289,6 +289,7 @@ class Ghost {
             if(this.mode.frightened) {
                 this.speed = this.frightenedModeSpeed;
             } else {
+                // if ghost is in other modes, revert speed back to original speed
                 this.speed = this.originalSpeed;
             }
         }
@@ -360,6 +361,15 @@ class Ghost {
         this.prevMode.chase = this.mode.chase;
 
     }
+
+    // function to reset all the other modes
+    resetAllModes() {
+        this.mode.chase = false;
+        this.mode.scatter = false;
+        this.mode.frightened = false;
+        this.mode.eaten = false;
+    }
+
     // After setting mode, need to turn 180 degrees (if entering chase, scatter or frightened mode),
     // get appropriate target
     // only for chase mode, target tile keeps changing
@@ -410,13 +420,15 @@ class Ghost {
 
     }
 
-
-    // function to reset all the other modes
-    resetAllModes() {
-        this.mode.chase = false;
-        this.mode.scatter = false;
-        this.mode.frightened = false;
-        this.mode.eaten = false;
+    // function to determine if ghost has reached the front of ghost house
+    // returns boolean
+    reachedGhostHouse() {
+        if(this.currentPosition.x == this.startingPosition.x) {
+            if(this.currentPosition.y == this.startingPosition.y) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

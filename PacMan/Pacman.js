@@ -141,8 +141,8 @@ class Pacman {
         // find the tile pacman is currently on
         let currentTile = maze.tiles[currentGridCoords.y][currentGridCoords.x];
 
-        // if the tile has a dot, then return true
-        if (currentTile.part.dot) {
+        // if the tile has a dot and it is not eaten, then return true
+        if (currentTile.part.dot && !currentTile.eaten) {
             return true;
         } else {
             return false;
@@ -153,20 +153,28 @@ class Pacman {
     // receives the maze object 
     // return boolean to determine if pacman has eaten the dot
     eatenEnergizer(maze) {
-        // Width of a tile
-        let tileWidth = maze.tileWidth;
-
-        // Height of a tile
-        let tileHeight = maze.tileHeight;
-
         // find the current position of pacman in grid coordinates
         let currentGridCoords = maze.remap(this.currentPosition, this.currentDirection);
 
         // find the tile pacman is currently on
         let currentTile = maze.tiles[currentGridCoords.y][currentGridCoords.x];
 
-        // if the tile has a energizer, then return true
-        if (currentTile.part.energizer) {
+        // if the tile has a energizer and it is not eaten, then return true
+        if (currentTile.part.energizer && !currentTile.eaten) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // function to check if pacman is eating a ghost
+    // receives ghost current position
+    eatGhost(ghostCurrentPosition) {
+        // if the distance between pacman and the ghost is less than the radius(half the width) of pacman
+        // pacman is eating ghost
+        // Note: the x,y coords of pacman / ghost are centre of circle
+        if (dist(this.currentPosition.x, this.currentPosition.y,
+            ghostCurrentPosition.x, ghostCurrentPosition.y) <= (this.width / 2)) {
             return true;
         } else {
             return false;
