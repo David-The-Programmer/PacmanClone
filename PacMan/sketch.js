@@ -44,34 +44,34 @@ const GHOST_WIDTH = PACMAN_WIDTH;
 const GHOST_SPEED = PACMAN_SPEED;
 
 // Starting x position of ghost
-const START_X_GHOST= (13 * TILE_WIDTH) + (TILE_WIDTH / 2);
+const START_X_GHOST = (13 * TILE_WIDTH) + (TILE_WIDTH / 2);
 
 // Starting y position of ghost
-const START_Y_GHOST= (11 * TILE_HEIGHT) + (TILE_HEIGHT / 2);
+const START_Y_GHOST = (11 * TILE_HEIGHT) + (TILE_HEIGHT / 2);
 
 // x coordinates of target tile for scatter mode for Blinky(red)
-const BLINKY_SCATTER_X_TARGET = (NUM_COLS_TILES - 1) * TILE_WIDTH; 
+const BLINKY_SCATTER_X_TARGET = (NUM_COLS_TILES - 1) * TILE_WIDTH;
 
 // y coordinates of target tile for scatter mode for Blinky(red)
-const BLINKY_SCATTER_Y_TARGET = 0; 
+const BLINKY_SCATTER_Y_TARGET = 0;
 
 // x coordinates of target tile for scatter mode for Pinky(pink)
-const PINKY_SCATTER_X_TARGET = 0; 
+const PINKY_SCATTER_X_TARGET = 0;
 
 // y coordinates of target tile for scatter mode for Pinky(pink)
-const PINKY_SCATTER_Y_TARGET = 0; 
+const PINKY_SCATTER_Y_TARGET = 0;
 
 // x coordinates of target tile for scatter mode for Inky(turquoise)
-const INKY_SCATTER_X_TARGET= (NUM_COLS_TILES - 1) * TILE_WIDTH; 
+const INKY_SCATTER_X_TARGET = (NUM_COLS_TILES - 1) * TILE_WIDTH;
 
 // y coordinates of target tile for scatter mode for Inky(turquoise)
-const INKY_SCATTER_Y_TARGET= (NUM_ROWS_TILES - 1) * TILE_HEIGHT; 
+const INKY_SCATTER_Y_TARGET = (NUM_ROWS_TILES - 1) * TILE_HEIGHT;
 
 // x coordinates of target tile for scatter mode for Clyde(orange)
-const CLYDE_SCATTER_X_TARGET = 0; 
+const CLYDE_SCATTER_X_TARGET = 0;
 
 // y coordinates of target tile for scatter mode for Clyde(orange)
-const CLYDE_SCATTER_Y_TARGET = (NUM_ROWS_TILES - 1) * TILE_HEIGHT; 
+const CLYDE_SCATTER_Y_TARGET = (NUM_ROWS_TILES - 1) * TILE_HEIGHT;
 
 // Maze object to store all info about the 2D array of tiles
 let maze;
@@ -130,10 +130,8 @@ function draw() {
     // show the ghost
     ghost.show();
 
-    // set the mode of the ghost
-    ghost.setMode("eaten");
     // handle the mode
-    ghost.handleMode();
+    ghost.handleMode(pacman.currentPosition);
 
     // move the ghost
     ghost.move(maze);
@@ -152,12 +150,19 @@ function draw() {
 
         } else if (keyCode == RIGHT_ARROW) {
             pacman.updateDirection(1, 0);
+
+        } else if (key == "a") {
+            ghost.setMode("chase");
+
+        } else if (key == "b") {
+            // set the mode of the ghost
+            ghost.setMode("scatter");
         }
 
     }
     // check if pacman has eaten dot
     // if he did, remove it
-    if(pacman.eatenDot(maze)) {
+    if (pacman.eatenDot(maze)) {
         // Get current grid coordinates of pacman 
         let currentGridCoords = maze.remap(pacman.currentPosition, pacman.currentDirection);
 

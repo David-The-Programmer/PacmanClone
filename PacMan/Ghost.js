@@ -43,6 +43,7 @@ class Ghost {
             eaten: false
         };
 
+        this.modeChanged = false;
 
         // scatter mode target tile x, y coords
         this.scatterModeTargetTileCoords = createVector(0, 0);
@@ -328,6 +329,20 @@ class Ghost {
 
         }
 
+        // if the attributes of current mode does not match the attributes of previous mode
+        // this means there was a change in mode
+        if (this.mode.frightened != this.prevMode.frightened ||
+            this.mode.scatter != this.prevMode.scatter ||
+            this.mode.chase != this.prevMode.chase ||
+            this.mode.eaten != this.prevMode.eaten) {
+            this.modeChanged = true;
+        }
+        // Make sure prevMode is equal to mode 
+        this.prevMode.eaten = this.mode.eaten;
+        this.prevMode.scatter = this.mode.scatter;
+        this.prevMode.frightened = this.mode.frightened;
+        this.prevMode.chase = this.mode.chase;
+
     }
     // After setting mode, need to turn 180 degrees (if entering chase, scatter or frightened mode),
     // get appropriate target
@@ -344,32 +359,42 @@ class Ghost {
         // have to keep track of previous mode
         // if previous mode is different from current mode
         // then turning 180 degrees would execute once
-        if (!this.mode.eaten) {
-            if (this.mode.eaten != this.prevMode.eaten ||
-                this.mode.frightened != this.prevMode.frightened ||
-                this.mode.scatter != this.prevMode.scatter ||
-                this.mode.chase != this.prevMode.chase) {
-                    this.updateDirection(this.currentDirection.x * -1, this.currentDirection.y * -1);
 
-                    // Make sure prevMode is equal to mode
-                    this.prevMode.eaten = this.mode.eaten;
-                    this.prevMode.scatter = this.mode.scatter;
-                    this.prevMode.frightened = this.mode.frightened;
-                    this.prevMode.chase = this.mode.chase;
-                }
+        if (!this.mode.eaten) {
+
+            // if the attributes of current mode does not match the attributes of previous mode
+            // this means there was a change in mode
+            // thus turn the ghost 180 degrees
+            // only change direction only when the ghost is exactly on one tile
+            // BIG PROBLEM...IT DOES NOT WORK AS IT SHOULD
+            // Problem is that this only happens once, and if the change happens 
+            // while the ghost is not exactly on a tile, turning 180 degrees does not happen
+
+            // actually when setting mode,  check if there was a mode change
+            // use a boolean to store if there was a mode change in the setMode() function
+            // use the boolean and compare with the steps
+            // if there was a mode change and steps is 0, turn 180 degrees,
+            // change the boolean modeChange back to false
+            if (this.steps == 0 && this.modeChanged) {
+
+                console.log("HELLO");
+
+                this.updateDirection(this.currentDirection.x * -1, this.currentDirection.y * -1);
+                this.modeChanged = false;
+            }
         }
         // set target tile according to respective mode activated
         // if scatter mode is activated, then set the target tile to be the scatter mode target tile
-        if(this.mode.scatter) {
+        if (this.mode.scatter) {
             this.setTargetTile(this.scatterModeTargetTileCoords);
 
             // if chase mode is activated then set target tile to be pacman current position
-        } else if(this.mode.chase) {
+        } else if (this.mode.chase) {
             this.setTargetTile(pacmanCurrentPosition);
 
             // if eaten mode is activated, then set the target tile to the ghost's starting position
             // in order to force the ghost to return back to the ghost house
-        } else if(this.mode.eaten) {
+        } else if (this.mode.eaten) {
             this.setTargetTile(this.startingPosition);
         }
 
