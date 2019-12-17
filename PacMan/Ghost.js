@@ -124,8 +124,13 @@ class Ghost {
 
         // if there is only one direction left, return the direction leading to the tile
         if (directions.length == 1) {
-
             return directions[0];
+
+            // if ghost is in frightened mode, then randomly select from directions available instead of
+            // calculating the distance of tile ahead to target tile based on directions available
+        } else if (this.mode.frightened) {
+            return random(directions);
+
         } else {
             // else, have to calculate and compare distance from the tile ahead (in all possible directions)
             // to the target tile to determine direction to go
@@ -331,6 +336,7 @@ class Ghost {
 
         // if the attributes of current mode does not match the attributes of previous mode
         // this means there was a change in mode
+        // set mode changed to true
         if (this.mode.frightened != this.prevMode.frightened ||
             this.mode.scatter != this.prevMode.scatter ||
             this.mode.chase != this.prevMode.chase ||
@@ -366,20 +372,15 @@ class Ghost {
             // this means there was a change in mode
             // thus turn the ghost 180 degrees
             // only change direction only when the ghost is exactly on one tile
-            // BIG PROBLEM...IT DOES NOT WORK AS IT SHOULD
-            // Problem is that this only happens once, and if the change happens 
-            // while the ghost is not exactly on a tile, turning 180 degrees does not happen
 
-            // actually when setting mode,  check if there was a mode change
-            // use a boolean to store if there was a mode change in the setMode() function
-            // use the boolean and compare with the steps
             // if there was a mode change and steps is 0, turn 180 degrees,
-            // change the boolean modeChange back to false
             if (this.steps == 0 && this.modeChanged) {
 
                 console.log("HELLO");
-
+                // turning ghost 180 degrees
                 this.updateDirection(this.currentDirection.x * -1, this.currentDirection.y * -1);
+
+                // change the boolean modeChange back to false
                 this.modeChanged = false;
             }
         }

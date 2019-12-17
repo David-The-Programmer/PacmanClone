@@ -151,13 +151,20 @@ function draw() {
         } else if (keyCode == RIGHT_ARROW) {
             pacman.updateDirection(1, 0);
 
-        } else if (key == "a") {
+        } else if (key == "c") {
             ghost.setMode("chase");
 
-        } else if (key == "b") {
-            // set the mode of the ghost
+        } else if (key == "s") {
             ghost.setMode("scatter");
+
+        } else if (key == "f") {
+            ghost.setMode("frightened");
+
+        } else if (key == "e") {
+            ghost.setMode("eaten");
         }
+
+
 
     }
     // check if pacman has eaten dot
