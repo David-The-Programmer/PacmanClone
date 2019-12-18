@@ -95,7 +95,7 @@ let pinky;
 let inky;
 
 // Array to store all four ghost
-let ghosts = [];
+let ghostsArr;
 
 function preload() {
     // load the maze image
@@ -139,6 +139,9 @@ function setup() {
     // init the scatter mode target tile of inky
     inky.setScatterTargetTile(createVector(INKY_SCATTER_X_TARGET, INKY_SCATTER_Y_TARGET));
 
+    // init ghost array
+    ghostsArr = [blinky, pinky, inky];
+
 }
 
 function draw() {
@@ -149,55 +152,63 @@ function draw() {
     // show the dots / energizers in the maze 
     maze.showDots();
 
-    // ----------------------------------Setting the ghosts mode----------------------------------------//
-    // Have to first check if pinky is not eaten
-    // as long as pinky is not eaten, set other modes appropriately
-    if (!pinky.mode.eaten) {
-        // if pacman eats a pinky that is not eaten yet
-        // check if pinky is frightened
-        if (pacman.eatGhost(pinky.currentPosition)) {
-            // if pinky is not frightened, pacman is dead (GAME OVER)
-            if (!pinky.mode.frightened) {
-                console.log("GAME OVER");
+    // move the pacman
+    pacman.move(maze);
 
-            } else {
-                // if pinky is frightened, then set pinky to eaten mode
-                pinky.setMode("eaten");
-                console.log("EATEN");
+    // show the pacman
+    pacman.show();
+
+    // ----------------------------------Setting the ghosts mode----------------------------------------//
+    for (let i = 0; i < ghostsArr.length; i++) {
+        // Have to first check if ghosts is not eaten
+        // as long as ghosts is not eaten, set other modes appropriately
+        if (!ghostsArr[i].mode.eaten) {
+            // if pacman eats a ghosts that is not eaten yet
+            // check if ghosts is frightened
+            if (pacman.eatGhost(ghostsArr[i].currentPosition)) {
+                // if ghosts is not frightened, pacman is dead (GAME OVER)
+                if (!ghostsArr[i].mode.frightened) {
+                    console.log("GAME OVER");
+
+                } else {
+                    // if ghosts is frightened, then set ghosts to eaten mode
+                    ghostsArr[i].setMode("eaten");
+                    console.log("EATEN");
+
+                }
+
+                // if frightened mode has ended, set mode to mode before frightened mode (chase or scatter)
+            } else if (ghostsArr[i].frightenedModeEnded()) {
+                ghostsArr[i].setMode(ghostsArr[i].modeBefFrightMode());
+                console.log(ghostsArr[i].modeBefFrightMode());
+
+                // if pacman eats energizer, then set ghosts to frightened mode
+            } else if (pacman.eatenEnergizer(maze)) {
+                ghostsArr[i].setMode("frightened");
+                console.log("FRIGHTENED");
+
+                // if chase mode has ended, set mode to scatter mode
+            } else if (ghostsArr[i].chaseModeEnded()) {
+                ghostsArr[i].setMode("scatter");
+                console.log("SCATTER");
+
+                // if scatter mode has ended, set the mode to chase mode
+            } else if (ghostsArr[i].scatterModeEnded()) {
+                ghostsArr[i].setMode("chase");
+                console.log("CHASE");
 
             }
-
-            // if frightened mode has ended, set mode to mode before frightened mode (chase or scatter)
-        } else if (pinky.frightenedModeEnded()) {
-            pinky.setMode(pinky.modeBefFrightMode());
-            console.log(pinky.modeBefFrightMode());
-
-            // if pacman eats energizer, then set pinky to frightened mode
-        } else if (pacman.eatenEnergizer(maze)) {
-            pinky.setMode("frightened");
-            console.log("FRIGHTENED");
-
-            // if chase mode has ended, set mode to scatter mode
-        } else if (pinky.chaseModeEnded()) {
-            pinky.setMode("scatter");
-            console.log("SCATTER");
-
-            // if scatter mode has ended, set the mode to chase mode
-        } else if (pinky.scatterModeEnded()) {
-            pinky.setMode("chase");
-            console.log("CHASE");
-
-        }
-    } else {
-        // if pinky is eaten, check if it has reached front of pinky house
-        if (pinky.reachedGhostHouse()) {
-            // if it has reached, check if mode before frightened was chase or scatter
-            // then set mode accordingly
-            pinky.setMode(pinky.modeBefFrightMode());
-            console.log(pinky.modeBefFrightMode());
+        } else {
+            // if ghosts is eaten, check if it has reached front of ghosts house
+            if (ghostsArr[i].reachedGhostHouse()) {
+                // if it has reached, check if mode before frightened was chase or scatter
+                // then set mode accordingly
+                ghostsArr[i].setMode(ghostsArr[i].modeBefFrightMode());
+                console.log(ghostsArr[i].modeBefFrightMode());
+            }
         }
     }
-    // if pacman eats dots/energizer, remove them, regardless of state of pinky
+    // if pacman eats dots/energizer, remove them, regardless of state of ghosts
     if (pacman.eatenDot(maze) || pacman.eatenEnergizer(maze)) {
         // Get current grid coordinates of pacman 
         let currentGridCoords = maze.remap(pacman.currentPosition, pacman.currentDirection);
@@ -206,18 +217,31 @@ function draw() {
     }
 
     // console.log(pinky.timer);
-    console.log("Frightened Mode Timer: " + pinky.frightenedModeTimer);
+    // console.log("Frightened Mode Timer: " + pinky.frightenedModeTimer);
 
     // ----------------------------------Setting the ghosts mode----------------------------------------//
 
-    // handle the mode appropriately
-    pinky.handleMode(pacman, maze);
+    for (let i = 0; i < ghostsArr.length; i++) {
+        // handle the mode appropriately
+        // if handling mode for Blinky, just give pacman's current position
+        if (i == 0) {
+            ghostsArr[i].handleMode(pacman.currentPosition);
 
-    // show the pinky
-    pinky.show();
+        } else if (i == 1) {
+            // if handling mode for Pinky, give pacman and maze
+            ghostsArr[i].handleMode(pacman, maze);
 
-    // move the pinky
-    pinky.move(maze);
+        } else if (i == 2) {
+            // if handling mode for Inky, give pacman, maze and blinky
+            ghostsArr[i].handleMode(pacman, maze, blinky);
+        }
+
+        // show the ghosts
+        ghostsArr[i].show();
+
+        // move the ghosts
+        ghostsArr[i].move(maze);
+    }
 
     // keyboard movements to control pacman
     if (keyIsPressed) {
@@ -235,11 +259,6 @@ function draw() {
 
         }
     }
-    // move the pacman
-    pacman.move(maze);
-
-    // show the pacman
-    pacman.show();
 
     // Game events execution order
     // ---------------------------

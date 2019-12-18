@@ -20,21 +20,32 @@ class Inky extends Ghost {
         // Now look 2 tiles ahead of current target tile coords
         let intermediateTile = super.lookAhead(pacmanGridCoords, p5.Vector.mult(pacman.currentDirection, 2), maze);
 
-        // point of rotation
+        // point of rotation (pivot point)
         let pointOfRotation = createVector(intermediateTile.x + (intermediateTile.width / 2), intermediateTile.y + (intermediateTile.height / 2));
 
-        // blinky's current position
+        // blinky's current position (vector to be rotated)
         let blinkyPosition = createVector(blinky.currentPosition.x, blinky.currentPosition.y);
 
-        // shift the point of origin to point of rotation
-        push();
-        translate(pointOfRotation.x, pointOfRotation.y);
-        // rotate blinky's current position by 180 degrees (PI)
-        blinkyPosition.rotate(Math.PI);
-        pop();
+        // coordinates of target tile
+        let targetTileCoords = createVector(0, 0);
 
+        // Translate blinky's current position (vector to be rotated) back to origin
+        blinkyPosition.x -= pointOfRotation.x;
+        blinkyPosition.y -= pointOfRotation.y;
+
+        // get coordinates of target tile by
+        // rotate blinky's current position by 180 degrees (PI)
+        targetTileCoords.x = Math.floor((blinkyPosition.x * Math.cos(Math.PI)) - (blinkyPosition.y * Math.sin(Math.PI)));
+        targetTileCoords.y = Math.floor((blinkyPosition.x * Math.sin(Math.PI)) + (blinkyPosition.y * Math.cos(Math.PI)));
+
+        // Translate target tile position back
+        targetTileCoords.x += pointOfRotation.x;
+        targetTileCoords.y += pointOfRotation.y;
+        
+        console.log(targetTileCoords);
+        
         // return the coordinates of target tile
-        return blinkyPosition;
+        return targetTileCoords;
 
     }
 
@@ -68,5 +79,6 @@ class Inky extends Ghost {
         // target point
         fill(0, 255, 255);
         ellipse(this.targetTileCoords.x, this.targetTileCoords.y, this.width / 2);
+        
     }
 }
