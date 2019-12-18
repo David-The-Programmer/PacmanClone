@@ -141,25 +141,38 @@ function draw() {
             } else {
                 // if ghost is frightened, then set ghost to eaten mode
                 ghost.setMode("eaten");
+                console.log("EATEN");
+
             }
+
+            // if frightened mode has ended, set mode to mode before frightened mode (chase or scatter)
+        } else if (ghost.frightenedModeEnded()) {
+            ghost.setMode(ghost.modeBefFrightMode());
+            console.log(ghost.modeBefFrightMode());
 
             // if pacman eats energizer, then set ghost to frightened mode
         } else if (pacman.eatenEnergizer(maze)) {
             ghost.setMode("frightened");
+            console.log("FRIGHTENED");
 
             // if chase mode has ended, set mode to scatter mode
         } else if (ghost.chaseModeEnded()) {
             ghost.setMode("scatter");
+            console.log("SCATTER");
 
             // if scatter mode has ended, set the mode to chase mode
-        } else if(ghost.scatterModeEnded()) {
+        } else if (ghost.scatterModeEnded()) {
             ghost.setMode("chase");
+            console.log("CHASE");
+
         }
     } else {
         // if ghost is eaten, check if it has reached front of ghost house
         if (ghost.reachedGhostHouse()) {
-            // if it has reached, set it back to scatter mode
-            ghost.setMode("scatter");
+            // if it has reached, check if mode before frightened was chase or scatter
+            // then set mode accordingly
+            ghost.setMode(ghost.modeBefFrightMode());
+            console.log(ghost.modeBefFrightMode());
         }
     }
     // if pacman eats dots/energizer, remove them, regardless of state of ghost
@@ -169,6 +182,9 @@ function draw() {
         // remove the dot/energizer
         maze.removeDot(currentGridCoords);
     }
+
+    // console.log(ghost.timer);
+    console.log("Frightened Mode Timer: " + ghost.frightenedModeTimer);
 
     // ----------------------------------Setting the ghost mode----------------------------------------//
 

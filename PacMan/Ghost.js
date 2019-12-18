@@ -59,7 +59,7 @@ class Ghost {
         this.chaseModeDuration = 1200;
 
         // duration of scatter mode 
-        this.scatterModeDuration = 420;
+        this.scatterModeDuration = 300;
 
         // duration of frightened mode 
         this.frightenedModeDuration = 540;
@@ -69,6 +69,12 @@ class Ghost {
 
         // timer to keep track of duration of frightened mode
         this.frightenedModeTimer = 0;
+
+        // mode of ghost before frightened mode
+        this.modeBeforeFrightenedMode = {
+            chase: false,
+            scatter: true
+        }
     }
 
     // function to set the target tile for scatter mode
@@ -302,7 +308,7 @@ class Ghost {
 
             // if the ghost is in frightened mode, use the frightened mode speed (half of normal speed)
             // speed change can only happen when the ghost is exactly on one tile
-            if(this.mode.frightened) {
+            if (this.mode.frightened) {
                 this.speed = this.frightenedModeSpeed;
             } else {
                 // if ghost is in other modes, revert speed back to original speed
@@ -426,19 +432,30 @@ class Ghost {
             // increment timer as well
             this.timer++;
 
+            // need to keep track of mode before frightened mode
+            this.modeBeforeFrightenedMode.scatter = true;
+            this.modeBeforeFrightenedMode.chase = false;
+
             // if chase mode is activated then set target tile to be the target tile of chase mode of the ghost
         } else if (this.mode.chase) {
             this.setTargetTile(chaseTargetTileCoords);
             // increment timer as well
             this.timer++;
 
+            // need to keep track of mode before frightened mode
+            this.modeBeforeFrightenedMode.chase = true;
+            this.modeBeforeFrightenedMode.scatter = false;
+
             // if eaten mode is activated, then set the target tile to the ghost's starting position
             // in order to force the ghost to return back to the ghost house
         } else if (this.mode.eaten) {
             this.setTargetTile(this.startingPosition);
-            
+
+            // if in eaten mode, reset frightened duration timer
+            this.frightenedModeTimer = 0;
+
             // if frightened mode is activated, then increment the frightenedMode timer
-        } else if(this.mode.frightened) {
+        } else if (this.mode.frightened) {
             this.frightenedModeTimer++;
         }
 
@@ -447,8 +464,8 @@ class Ghost {
     // function to determine if ghost has reached the front of ghost house
     // returns boolean
     reachedGhostHouse() {
-        if(this.currentPosition.x == this.startingPosition.x) {
-            if(this.currentPosition.y == this.startingPosition.y) {
+        if (this.currentPosition.x == this.startingPosition.x) {
+            if (this.currentPosition.y == this.startingPosition.y) {
                 return true;
             }
         }
@@ -460,12 +477,12 @@ class Ghost {
     scatterModeEnded() {
         // if current mode of ghost is scatter and duration of timer is equal to duration of scatter mode
         // reset and return true
-        if(this.mode.scatter && this.timer == this.scatterModeDuration) {
+        if (this.mode.scatter && this.timer == this.scatterModeDuration) {
             this.timer = 0;
             return true;
         }
         return false;
-        
+
     }
 
     // function to determine if chase mode duration has ended
@@ -473,26 +490,35 @@ class Ghost {
     chaseModeEnded() {
         // if current mode of ghost is chase and duration of timer is equal to duration of chase mode
         // reset and return true
-        if(this.mode.chase && this.timer == this.chaseModeDuration) {
+        if (this.mode.chase && this.timer == this.chaseModeDuration) {
             this.timer = 0;
             return true;
         }
         return false;
-        
+
     }
 
     // function to determine if frightened mode duration has ended
     // returns boolean
     frightenedModeEnded() {
         // if current mode of ghost is frightened and duration of timer is equal to duration of frightened mode
-        // or if ghost is in eaten mode
         // reset and return true
-        if((this.mode.frightened && this.frightenedModeTimer == this.frightenedModeDuration) || this.mode.eaten) {
+        if (this.mode.frightened && this.frightenedModeTimer == this.frightenedModeDuration) {
             this.frightenedModeTimer = 0;
             return true;
         }
         return false;
-        
+
+    }
+
+    // function to determine which mode ghost was in before frightened mode
+    // returns a string ("scatter" or "chase") 
+    modeBefFrightMode() {
+        if(this.modeBeforeFrightenedMode.chase) {
+            return "chase";
+        } else if(this.modeBeforeFrightenedMode.scatter) {
+            return "scatter";
+        }
     }
 
 }
