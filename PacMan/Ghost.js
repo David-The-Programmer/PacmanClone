@@ -102,6 +102,9 @@ class Ghost {
         }
         noStroke();
         ellipse(this.currentPosition.x, this.currentPosition.y, this.width);
+        // target point
+        fill(255, 0, 0);
+        ellipse(this.targetTileCoords.x, this.targetTileCoords.y, this.width / 2);
     }
 
     // function to set the target tile of the ghost (set the grid coords of the target tile)

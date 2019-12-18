@@ -85,11 +85,17 @@ let mazeImg;
 // Pac-Man object
 let pacman;
 
-// Ghost object
-let ghost;
+// Ghost blinky
+let blinky;
 
 // Ghost pinky
 let pinky;
+
+// Ghost inky
+let inky;
+
+// Array to store all four ghost
+let ghosts = [];
 
 function preload() {
     // load the maze image
@@ -115,17 +121,24 @@ function setup() {
     // Init the pacman
     pacman = new Pacman(START_X_PACMAN, START_Y_PACMAN, PACMAN_WIDTH, PACMAN_SPEED);
 
-    // init ghost
-    ghost = new Ghost(START_X_GHOST, START_Y_GHOST, GHOST_WIDTH, GHOST_SPEED);
+    // init blinky
+    blinky = new Ghost(START_X_GHOST, START_Y_GHOST, GHOST_WIDTH, GHOST_SPEED);
 
-    // init the scatter mode target tile of ghost
-    ghost.setScatterTargetTile(createVector(BLINKY_SCATTER_X_TARGET, BLINKY_SCATTER_Y_TARGET));
+    // init the scatter mode target tile of blinky
+    blinky.setScatterTargetTile(createVector(BLINKY_SCATTER_X_TARGET, BLINKY_SCATTER_Y_TARGET));
 
     // init pinky
     pinky = new Pinky(START_X_GHOST, START_Y_GHOST, GHOST_WIDTH, GHOST_SPEED);
 
     // init the scatter mode target tile of pinky
     pinky.setScatterTargetTile(createVector(PINKY_SCATTER_X_TARGET, PINKY_SCATTER_Y_TARGET));
+
+    // init inky
+    inky = new Inky(START_X_GHOST, START_Y_GHOST, GHOST_WIDTH, GHOST_SPEED);
+
+    // init the scatter mode target tile of inky
+    inky.setScatterTargetTile(createVector(INKY_SCATTER_X_TARGET, INKY_SCATTER_Y_TARGET));
+
 }
 
 function draw() {
@@ -136,7 +149,7 @@ function draw() {
     // show the dots / energizers in the maze 
     maze.showDots();
 
-    // ----------------------------------Setting the pinky mode----------------------------------------//
+    // ----------------------------------Setting the ghosts mode----------------------------------------//
     // Have to first check if pinky is not eaten
     // as long as pinky is not eaten, set other modes appropriately
     if (!pinky.mode.eaten) {
@@ -195,7 +208,7 @@ function draw() {
     // console.log(pinky.timer);
     console.log("Frightened Mode Timer: " + pinky.frightenedModeTimer);
 
-    // ----------------------------------Setting the pinky mode----------------------------------------//
+    // ----------------------------------Setting the ghosts mode----------------------------------------//
 
     // handle the mode appropriately
     pinky.handleMode(pacman, maze);
