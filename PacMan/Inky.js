@@ -38,8 +38,6 @@ class Inky extends Ghost {
         blinkyPosition.x += pointOfRotation.x;
         blinkyPosition.y += pointOfRotation.y;
         
-        console.log(blinkyPosition);
-        
         // return the coordinates of target tile
         return blinkyPosition; 
     }
