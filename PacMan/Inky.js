@@ -26,27 +26,22 @@ class Inky extends Ghost {
         // blinky's current position (vector to be rotated)
         let blinkyPosition = createVector(blinky.currentPosition.x, blinky.currentPosition.y);
 
-        // coordinates of target tile
-        let targetTileCoords = createVector(0, 0);
-
         // Translate blinky's current position (vector to be rotated) back to origin
         blinkyPosition.x -= pointOfRotation.x;
         blinkyPosition.y -= pointOfRotation.y;
 
         // get coordinates of target tile by
         // rotate blinky's current position by 180 degrees (PI)
-        targetTileCoords.x = Math.floor((blinkyPosition.x * Math.cos(Math.PI)) - (blinkyPosition.y * Math.sin(Math.PI)));
-        targetTileCoords.y = Math.floor((blinkyPosition.x * Math.sin(Math.PI)) + (blinkyPosition.y * Math.cos(Math.PI)));
+        blinkyPosition.rotate(Math.PI);
 
-        // Translate target tile position back
-        targetTileCoords.x += pointOfRotation.x;
-        targetTileCoords.y += pointOfRotation.y;
+        // Translate blinky position back
+        blinkyPosition.x += pointOfRotation.x;
+        blinkyPosition.y += pointOfRotation.y;
         
-        console.log(targetTileCoords);
+        console.log(blinkyPosition);
         
         // return the coordinates of target tile
-        return targetTileCoords;
-
+        return blinkyPosition; 
     }
 
     // function to handle the modes for Inky
