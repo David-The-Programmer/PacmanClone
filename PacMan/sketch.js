@@ -94,6 +94,9 @@ let pinky;
 // Ghost inky
 let inky;
 
+// Ghost clyde
+let clyde;
+
 // Array to store all four ghost
 let ghostsArr;
 
@@ -139,8 +142,14 @@ function setup() {
     // init the scatter mode target tile of inky
     inky.setScatterTargetTile(createVector(INKY_SCATTER_X_TARGET, INKY_SCATTER_Y_TARGET));
 
+    // init clyde
+    clyde = new Clyde(START_X_GHOST, START_Y_GHOST, GHOST_WIDTH, GHOST_SPEED);
+
+    // init the scatter mode target tile of clyde
+    clyde.setScatterTargetTile(createVector(CLYDE_SCATTER_X_TARGET, CLYDE_SCATTER_Y_TARGET));
+
     // init ghost array
-    ghostsArr = [blinky, pinky, inky];
+    ghostsArr = [blinky, pinky, inky, clyde];
 
 }
 
@@ -227,8 +236,8 @@ function draw() {
         if (i == 0) {
             ghostsArr[i].handleMode(pacman.currentPosition);
 
-        } else if (i == 1) {
-            // if handling mode for Pinky, give pacman and maze
+        } else if (i == 1 || i == 3) {
+            // if handling mode for Pinky and Clyde, give pacman and maze
             ghostsArr[i].handleMode(pacman, maze);
 
         } else if (i == 2) {

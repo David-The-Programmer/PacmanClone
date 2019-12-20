@@ -11,25 +11,39 @@ class Clyde extends Ghost {
         super(x, y, width, speed);
     }
 
-    // function to calculate and return target tile coords of chase mode for Clyde
+    // function to find the number of tiles between pacman and clyde
     // receives pacman object and the maze object for calculation
-    getChaseTargetTileCoords(pacman, maze) {
+    // returns the number of tiles between pacman and clyde
+    getNumTilesBtwnPacAndClyde(pacman, maze) {
         // Need to get grid coords of pacman
         let pacmanGridCoords = maze.remap(pacman.currentPosition, pacman.currentDirection);
 
-        // Now look 4 tiles ahead of current target tile coords
-        let targetTile = super.lookAhead(pacmanGridCoords, p5.Vector.mult(pacman.currentDirection, 4), maze);
+        // Need to get grid coords of clyde
+        let clydeGridCoords = maze.remap(this.currentPosition, this.currentDirection);
 
-        // return the coordinates of target tile
-        return createVector(targetTile.x + (targetTile.width / 2), targetTile.y + (targetTile.height / 2));
+        // Find euclidean distance between pacman and clyde (which will be the number of tiles between them)
+        let eucDist = dist(pacmanGridCoords.x, pacmanGridCoords.y, clydeGridCoords.x, clydeGridCoords.y);
+
+        return eucDist;
 
     }
 
     // function to handle the modes for Clyde
     // overides ghost handleMode method
     handleMode(pacman, maze) {
-        // get the new target tile coords
-        let chaseTargetTileCoords = this.getChaseTargetTileCoords(pacman, maze);
+        // Get the number of tiles between Clyde and pacman
+        let numTilesBtwnPacAndClyde = this.getNumTilesBtwnPacAndClyde(pacman, maze);
+
+        // the target tile of chase mode for clyde
+        let chaseTargetTileCoords;
+
+        // if the number of tiles is >= 8, then set the chase target tile coordinates to pacman's position
+        if (numTilesBtwnPacAndClyde >= 8) {
+            chaseTargetTileCoords = createVector(pacman.currentPosition.x, pacman.currentPosition.y);
+        } else {
+            // else set the chase target tile coordinates to scatter mode target tile coordinates
+            chaseTargetTileCoords = createVector(this.scatterModeTargetTileCoords.x, this.scatterModeTargetTileCoords.y);
+        }
 
         super.handleMode(chaseTargetTileCoords);
     }
