@@ -67,8 +67,5 @@ class Clyde extends Ghost {
         }
         noStroke();
         ellipse(this.currentPosition.x, this.currentPosition.y, this.width);
-        // target point
-        fill(255, 184, 82);
-        ellipse(this.targetTileCoords.x, this.targetTileCoords.y, this.width / 2);
     }
 }

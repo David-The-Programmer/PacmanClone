@@ -69,9 +69,5 @@ class Inky extends Ghost {
         }
         noStroke();
         ellipse(this.currentPosition.x, this.currentPosition.y, this.width);
-        // target point
-        fill(0, 255, 255);
-        ellipse(this.targetTileCoords.x, this.targetTileCoords.y, this.width / 2);
-        
     }
 }

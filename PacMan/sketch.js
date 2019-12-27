@@ -10,9 +10,6 @@ const CANVAS_WIDTH = 448;
 // Height of the canvas
 const CANVAS_HEIGHT = 496;
 
-// canvas object
-// 
-
 // Number of rows of tiles
 const NUM_ROWS_TILES = 31;
 
@@ -73,6 +70,9 @@ const CLYDE_SCATTER_X_TARGET = TILE_WIDTH / 2;
 // y coordinates of target tile for scatter mode for Clyde(orange)
 const CLYDE_SCATTER_Y_TARGET = ((NUM_ROWS_TILES - 1) * TILE_HEIGHT) + (TILE_HEIGHT / 2);
 
+// canvas object
+let canvas;
+
 // Maze object to store all info about the 2D array of tiles
 let maze;
 
@@ -116,7 +116,10 @@ function preload() {
 
 
 function setup() {
-    createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
+    // init the canvas
+    canvas = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
+    // centre the canvas
+    canvas.position((windowWidth - CANVAS_WIDTH) / 2, (windowHeight - CANVAS_HEIGHT) / 2);
 
     // init the maze
     maze = new Maze(NUM_ROWS_TILES, NUM_COLS_TILES, TILE_WIDTH, TILE_HEIGHT, tileRep);
@@ -224,9 +227,6 @@ function draw() {
         // remove the dot/energizer
         maze.removeDot(currentGridCoords);
     }
-
-    // console.log(pinky.timer);
-    // console.log("Frightened Mode Timer: " + pinky.frightenedModeTimer);
 
     // ----------------------------------Setting the ghosts mode----------------------------------------//
 
