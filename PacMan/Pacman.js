@@ -26,6 +26,12 @@ class Pacman {
 
         // previous direction which pacman was moving
         this.prevDirection = createVector(this.currentDirection.x, this.currentDirection.y);
+
+        // game score of pacman
+        this.gameScore = 0;
+
+        // fitness score of pacman
+        this.fitnessScore = 0;
     }
 
     // function to display the pacman
@@ -179,6 +185,17 @@ class Pacman {
         } else {
             return false;
         }
+    }
+
+    // function to increment game score of pacman
+    // receives points used to increment the game score
+    incrementGameScore(points) {
+        this.gameScore += points;
+    }
+
+    // function to calculate fitness score of pacman
+    calculateFitness() {
+        this.fitnessScore = this.gameScore ** 2;
     }
 
 }

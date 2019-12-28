@@ -103,8 +103,6 @@ let ghostsArr;
 // timer to count how many frames has passed to init ghosts at different timings
 let delayTimer = 0;
 
-// boolean to determine if all ghosts are initialised
-
 function preload() {
     // load the maze image
     mazeImg = loadImage("./assets/map.jpg");
@@ -210,29 +208,23 @@ function draw() {
                 } else {
                     // if ghosts is frightened, then set ghosts to eaten mode
                     ghostsArr[i].setMode("eaten");
-                    console.log("EATEN" + i);
-
                 }
 
                 // if frightened mode has ended, set mode to mode before frightened mode (chase or scatter)
             } else if (ghostsArr[i].frightenedModeEnded()) {
                 ghostsArr[i].setMode(ghostsArr[i].modeBefFrightMode());
-                console.log(ghostsArr[i].modeBefFrightMode() + i);
 
                 // if pacman eats energizer, then set ghosts to frightened mode
             } else if (pacman.eatenEnergizer(maze)) {
                 ghostsArr[i].setMode("frightened");
-                console.log("FRIGHTENED" + i);
 
                 // if chase mode has ended, set mode to scatter mode
             } else if (ghostsArr[i].chaseModeEnded()) {
                 ghostsArr[i].setMode("scatter");
-                console.log("SCATTER" + i);
 
                 // if scatter mode has ended, set the mode to chase mode
             } else if (ghostsArr[i].scatterModeEnded()) {
                 ghostsArr[i].setMode("chase");
-                console.log("CHASE" + i);
 
             }
         } else {
@@ -241,7 +233,6 @@ function draw() {
                 // if it has reached, check if mode before frightened was chase or scatter
                 // then set mode accordingly
                 ghostsArr[i].setMode(ghostsArr[i].modeBefFrightMode());
-                console.log(ghostsArr[i].modeBefFrightMode() + i);
             }
         }
     }
@@ -251,6 +242,15 @@ function draw() {
         let currentGridCoords = maze.remap(pacman.currentPosition, pacman.currentDirection);
         // remove the dot/energizer
         maze.removeDot(currentGridCoords);
+
+        // Increment the game score 
+        pacman.incrementGameScore(1);
+        console.log(`Game Score: ${pacman.gameScore}`);
+        
+        // Update the fitness score of pacman accordingly
+        pacman.calculateFitness();
+        console.log(`Fitness Score: ${pacman.fitnessScore}`);
+        
     }
 
     // ----------------------------------Setting the ghosts mode----------------------------------------//
