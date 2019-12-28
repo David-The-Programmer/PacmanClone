@@ -100,6 +100,11 @@ let clyde;
 // Array to store all four ghost
 let ghostsArr;
 
+// timer to count how many frames has passed to init ghosts at different timings
+let delayTimer = 0;
+
+// boolean to determine if all ghosts are initialised
+
 function preload() {
     // load the maze image
     mazeImg = loadImage("./assets/map.jpg");
@@ -152,11 +157,31 @@ function setup() {
     clyde.setScatterTargetTile(createVector(CLYDE_SCATTER_X_TARGET, CLYDE_SCATTER_Y_TARGET));
 
     // init ghost array
-    ghostsArr = [blinky, pinky, inky, clyde];
+    ghostsArr = [blinky];
 
 }
 
 function draw() {
+    // Initialising ghosts at different timings
+    if (delayTimer % 500 == 0 && delayTimer != 0 && ghostsArr.length < 4) {
+        if (ghostsArr.length == 1) {
+            ghostsArr.push(pinky);
+
+        } else if (ghostsArr.length == 2) {
+            ghostsArr.push(inky);
+
+        } else if (ghostsArr.length == 3) {
+            ghostsArr.push(clyde);
+        }
+    }
+
+    // only increment timer if still initialising ghosts
+    if (ghostsArr.length < 4) {
+        delayTimer++;
+    } else {
+        delayTimer = 0;
+    }
+
     background(0);
     // draw the image of maze
     image(mazeImg, 0, 0);
@@ -231,18 +256,52 @@ function draw() {
     // ----------------------------------Setting the ghosts mode----------------------------------------//
 
     for (let i = 0; i < ghostsArr.length; i++) {
-        // handle the mode appropriately
-        // if handling mode for Blinky, just give pacman's current position
-        if (i == 0) {
+        // handle the mode appropriately according to the length of ghost array
+        // (to compensate for ghost initialised at different timings)
+        if (ghostsArr.length == 1) {
+            // if only blinky is present, then handle mode for blinky
+            // if handling mode for Blinky, just give pacman's current position
             ghostsArr[i].handleMode(pacman.currentPosition);
 
-        } else if (i == 1 || i == 3) {
-            // if handling mode for Pinky and Clyde, give pacman and maze
-            ghostsArr[i].handleMode(pacman, maze);
+        } else if (ghostsArr.length == 2) {
+            // if both blinky and pinky are present, handle modes for both
+            if (i == 0) {
+                // if handling mode for Blinky, just give pacman's current position
+                ghostsArr[i].handleMode(pacman.currentPosition);
+            } else {
+                // if handling mode for Pinky, give pacman and maze
+                ghostsArr[i].handleMode(pacman, maze);
+            }
 
-        } else if (i == 2) {
-            // if handling mode for Inky, give pacman, maze and blinky
-            ghostsArr[i].handleMode(pacman, maze, blinky);
+        } else if (ghostsArr.length == 3) {
+            // if blinky, pinky and inky are present, handle modes for all
+            if (i == 0) {
+                // if handling mode for Blinky, just give pacman's current position
+                ghostsArr[i].handleMode(pacman.currentPosition);
+
+            } else if (i == 1) {
+                // if handling mode for Pinky, give pacman and maze
+                ghostsArr[i].handleMode(pacman, maze);
+
+            } else if (i == 2) {
+                // if handling mode for Inky, give pacman, maze and blinky
+                ghostsArr[i].handleMode(pacman, maze, blinky);
+            }
+
+        } else if (ghostsArr.length == 4) {
+            // if all ghost are present, handle modes for all
+            if (i == 0) {
+                // if handling mode for Blinky, just give pacman's current position
+                ghostsArr[i].handleMode(pacman.currentPosition);
+
+            } else if (i == 1 || i == 3) {
+                // if handling mode for Pinky and Clyde, give pacman and maze
+                ghostsArr[i].handleMode(pacman, maze);
+
+            } else if (i == 2) {
+                // if handling mode for Inky, give pacman, maze and blinky
+                ghostsArr[i].handleMode(pacman, maze, blinky);
+            }
         }
 
         // show the ghosts
