@@ -59,7 +59,7 @@ class Ghost {
         this.chaseModeDuration = 1200;
 
         // duration of scatter mode 
-        this.scatterModeDuration = 300;
+        this.scatterModeDuration = 600;
 
         // duration of frightened mode 
         this.frightenedModeDuration = 540;
