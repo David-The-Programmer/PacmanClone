@@ -180,19 +180,6 @@ function draw() {
         delayTimer = 0;
     }
 
-    background(0);
-    // draw the image of maze
-    image(mazeImg, 0, 0);
-
-    // show the dots / energizers in the maze 
-    maze.showDots();
-
-    // move the pacman
-    pacman.move(maze);
-
-    // show the pacman
-    pacman.show();
-
     // ----------------------------------Setting the ghosts mode----------------------------------------//
     for (let i = 0; i < ghostsArr.length; i++) {
         // Have to first check if ghosts is not eaten
@@ -246,15 +233,16 @@ function draw() {
         // Increment the game score 
         pacman.incrementGameScore(1);
         console.log(`Game Score: ${pacman.gameScore}`);
-        
+
         // Update the fitness score of pacman accordingly
         pacman.calculateFitness();
         console.log(`Fitness Score: ${pacman.fitnessScore}`);
-        
+
     }
 
-    // ----------------------------------Setting the ghosts mode----------------------------------------//
+    // ----------------------------------End of setting the ghosts mode----------------------------------------//
 
+    // ----------------------------------HANDLING GHOST MODES----------------------------------//
     for (let i = 0; i < ghostsArr.length; i++) {
         // handle the mode appropriately according to the length of ghost array
         // (to compensate for ghost initialised at different timings)
@@ -304,10 +292,12 @@ function draw() {
             }
         }
 
-        // show the ghosts
-        ghostsArr[i].show();
+    }
+    // ----------------------------------HANDLING GHOST MODES----------------------------------//
 
-        // move the ghosts
+    // ------------UPDATING POSITION OF ENTITIES----------------//
+    for (let i = 0; i < ghostsArr.length; i++) {
+        // move the ghosts(update the position of ghosts)
         ghostsArr[i].move(maze);
     }
 
@@ -327,16 +317,44 @@ function draw() {
 
         }
     }
+    // move the pacman (update the position of pacman)
+    pacman.move(maze);
+    // ------------UPDATING POSITION OF ENTITIES----------------//
+
+    // -----------------DRAWING------------------------//
+    background(0);
+
+    // draw the image of maze
+    image(mazeImg, 0, 0);
+
+    // show the dots / energizers in the maze 
+    maze.showDots();
+
+    for (let i = 0; i < ghostsArr.length; i++) {
+        // show the ghosts
+        ghostsArr[i].show();
+    }
+
+    // show the pacman
+    pacman.show();
+    // -----------------DRAWING------------------------//
 
     // Game events execution order
     // ---------------------------
-    // 1) Background 
-    // 2) Show dots / energizers
-    // 3) Coordination of setting current mode of ghost
-    // 4) Handling what to do for the current mode of ghost
-    // 5) Show ghost
-    // 6) Move ghost 
-    // 7) Keyboard controls for pacman
-    // 8) Move pacman
+    // 1) Coordination of setting current mode of ghost
+    // 2) Handling what to do for the current mode of ghost
+    // 3) Move ghost 
+    // 4) Keyboard controls for pacman
+    // 5) Move pacman
+    // 6) Background 
+    // 7) Show dots / energizers
+    // 8) Show ghost
     // 9) Show pacman
+
+    // Game functions to be in the game run function
+    // 1) Coordination of setting current mode of ghost
+    // 2) Handling what to do for the current mode of ghost
+    // 3) Updating position of entities (Move ghost, Keyboard controls for pacman, Move pacman)
+
+    // Show entities (Background, Show dots / energizers, Show ghost, Show pacman)
 }
