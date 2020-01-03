@@ -40,6 +40,7 @@ function draw() {
     if(game.gameOver) {
         noLoop();
     }
+    console.log(game.generateInputs());
     game.run();
     game.show();
 

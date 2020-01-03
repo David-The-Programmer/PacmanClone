@@ -115,7 +115,7 @@ class Pacman {
         // number of rows in the maze
         let numRows = maze.numRows;
 
-        let gridCoordsAhead = currentGridCoords;
+        let gridCoordsAhead = createVector(currentGridCoords.x, currentGridCoords.y);
 
         gridCoordsAhead.x += currentDirection.x;
         gridCoordsAhead.y += currentDirection.y;
