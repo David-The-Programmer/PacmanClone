@@ -16,6 +16,9 @@ let mazeImg;
 // game object
 let game = new Game();
 
+// Loading lib here
+const tml5 = new TML5();
+
 function preload() {
     // load the maze image
     mazeImg = loadImage("./assets/map.jpg");
@@ -28,21 +31,31 @@ function preload() {
     // 8 = energizer
     // 6 = blank space
     tileRep = loadJSON("./data/tileRep.json");
+
+    // TML5
+    tml5.init(TML5_CONFIG);
 }
 
 
 function setup() {
     // init the game
     game.init(GAME_CONSTS, mazeImg, tileRep);
+
+    // Set up the tml5
+    tml5.setUpVideo();
+    tml5.classifyVideo();
 }
 
 function draw() {
     if(game.gameOver) {
         noLoop();
     }
-    console.log(game.generateInputs());
     game.run();
     game.show();
+
+    if(label){
+        tml5.drawVideo();
+    }
 
     // // Game events execution order
     // // ---------------------------

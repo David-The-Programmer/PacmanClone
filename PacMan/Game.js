@@ -44,10 +44,10 @@ class Game {
     // receives all the game constants(JSON), mazeImg and tile representation(JSON)
     init(gameConsts, mazeImg, tileRep) {
         // init the canvas
-        this.canvas = createCanvas(gameConsts.CANVAS_WIDTH, gameConsts.CANVAS_HEIGHT);
+        this.canvas = createCanvas(gameConsts.CANVAS_WIDTH * 2, gameConsts.CANVAS_HEIGHT);
 
         // centre the canvas
-        this.canvas.position((windowWidth - gameConsts.CANVAS_WIDTH) / 2, (windowHeight - gameConsts.CANVAS_HEIGHT) / 2);
+        this.canvas.position((windowWidth - (gameConsts.CANVAS_WIDTH * 2)) / 2, (windowHeight - (gameConsts.CANVAS_HEIGHT)) / 2);
 
         // init the maze
         this.maze = new Maze(gameConsts.NUM_ROWS_TILES, gameConsts.NUM_COLS_TILES, gameConsts.TILE_WIDTH, gameConsts.TILE_HEIGHT, tileRep);
@@ -240,21 +240,36 @@ class Game {
         }
 
         // keyboard movements to control pacman
-        if (keyIsPressed) {
-            if (keyCode == UP_ARROW) {
+        // if (keyIsPressed) {
+        //     if (keyCode == UP_ARROW) {
+        //         this.pacman.updateDirection(0, -1);
+
+        //     } else if (keyCode == DOWN_ARROW) {
+        //         this.pacman.updateDirection(0, 1);
+
+        //     } else if (keyCode == LEFT_ARROW) {
+        //         this.pacman.updateDirection(-1, 0);
+
+        //     } else if (keyCode == RIGHT_ARROW) {
+        //         this.pacman.updateDirection(1, 0);
+
+        //     }
+        // }
+
+
+        // tml5 inputs
+        if (label) {
+            if (label === "up") {
                 this.pacman.updateDirection(0, -1);
-
-            } else if (keyCode == DOWN_ARROW) {
+            } else if (label === "down") {
                 this.pacman.updateDirection(0, 1);
-
-            } else if (keyCode == LEFT_ARROW) {
+            } else if (label == "left") {
                 this.pacman.updateDirection(-1, 0);
-
-            } else if (keyCode == RIGHT_ARROW) {
+            } else if (label == "right") {
                 this.pacman.updateDirection(1, 0);
-
             }
         }
+
         // move the pacman (update the position of pacman)
         this.pacman.move(this.maze);
 
@@ -492,7 +507,7 @@ class Game {
                 } else {
                     inputs.push(0);
                 }
-            } else if(i == 1) {
+            } else if (i == 1) {
                 // check if pinky is frightened
                 // if she is, add 1 to inputs
                 if (this.pinky.mode.frightened) {
@@ -501,7 +516,7 @@ class Game {
                     inputs.push(0);
                 }
 
-            } else if(i == 2) {
+            } else if (i == 2) {
                 // check if inky is frightened
                 // if he is, add 1 to inputs
                 if (this.inky.mode.frightened) {
@@ -510,7 +525,7 @@ class Game {
                     inputs.push(0);
                 }
 
-            } else if(i == 3) {
+            } else if (i == 3) {
                 // check if clyde is frightened
                 // if he is, add 1 to inputs
                 if (this.clyde.mode.frightened) {
